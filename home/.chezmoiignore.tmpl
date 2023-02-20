@@ -1,0 +1,35 @@
+.config/fish/config.fish.backup
+.config/fish/fish_history
+.config/fish/fish_variables
+*/README.md
+fishd.*
+
+{{ if ne .chezmoi.os "darwin" }}
+.chezmoiscripts/darwin/**
+.config/karabiner
+.hammerspoon
+.mackup
+.mackup.cfg
+{{ end }}
+
+{{ if ne .chezmoi.os "linux" }}
+.chezmoiscripts/linux/**
+.local/share/fonts
+{{ end }}
+
+{{ if ne .chezmoi.os "windows" }}
+.chezmoiscripts/windows/**
+Documents
+{{ else }}
+.bash_aliases
+.config/git/cookies
+.gnupg
+.gnupg/**
+.inputrc
+.ssh/**
+.tmux.conf
+.vim
+.vimrc
+.zprofile
+.zsh*
+{{ end }}
