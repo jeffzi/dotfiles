@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Install remotely from single shell command
-# Usage : sh -c "$(curl -fsSL https://gitlab.com/jeffzi/dotfiles/install.sh)"
+# Usage : sh -c "$(curl -fsSL https://gitlab.com/jeffzi/dotfiles/-/raw/main/install.sh)"
 
 case "$OSTYPE" in
   darwin*)  echo "Installing Xcode Command Line Tools"; xcode-select --install 2> /dev/null ;; 
