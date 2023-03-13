@@ -13,11 +13,11 @@ BOLD=$(tput bold)
 RESET=$(tput sgr0)
 
 info() {
-    echo "==> ${BOLD}${CYAN}$1${RESET}"
+    echo "${BOLD}${CYAN}=> $1${RESET}"
 }
 
 error() {
-    echo "==> ${BOLD}${RED}$1${RESET}"
+    echo "${BOLD}${RED}=> $1${RESET}"
     exit 1
 }
 
