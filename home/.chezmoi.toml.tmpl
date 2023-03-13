@@ -1,0 +1,10 @@
+{{- $username := "jeffzi" -}}
+{{- $hostname := printf "%s-%s" .chezmoi.os $username -}}
+
+[data]
+    username = "{{ $username }}"
+    hostname = "{{ $hostname }}"
+
+[edit]
+    command = "code"
+    args = ["--wait"]
