@@ -1,0 +1,221 @@
+#!/bin/bash
+
+set -eufo pipefail
+
+#==============================================================================
+# Helpers
+#==============================================================================
+
+CYAN=$(tput setaf 6)
+BOLD=$(tput bold)
+RESET=$(tput sgr0)
+
+info() {
+    echo -e "\n${BOLD}${CYAN}=> $1${RESET}"
+}
+
+#==============================================================================
+# Install packages
+#==============================================================================
+
+{{ $taps := list
+     "homebrew/cask-drivers"
+     "homebrew/cask-fonts"
+     "lyraphase/pcloud"
+-}}
+
+{{ $brews := list
+     "awscli"
+     "bash"
+     "bat"
+     "curl"
+     "exa"
+     "fish"
+     "gh"
+     "git-lfs"
+     "git"
+     "go-task"
+     "htop"
+     "jq"
+     "mackup"
+     "mas"
+     "node"
+     "openjdk"
+     "ripgrep"
+     "starship"
+     "tldr"
+     "tree"
+     "wget"
+-}}
+
+{{ $casks := list
+     "1password-cli"
+     "1password"
+     "adguard"
+     "altserver"
+     "amethyst"
+     "bartender"
+     "betterdisplay"
+     "brooklyn"
+     "cameracontroller"
+     "cheatsheet"
+     "datagrip"
+     "discord"
+     "firefox"
+     "font-fira-code-nerd-font"
+     "font-hack-nerd-font"
+     "font-sauce-code-pro-nerd-font"
+     "google-chrome"
+     "hammerspoon"
+     "iina"
+     "imageoptim"
+     "insomnia"
+     "iterm2"
+     "keka"
+     "muzzle"
+     "numi"
+     "pcloud-drive"
+     "protonvpn"
+     "qmk-toolbox"
+     "raycast"
+     "rider"
+     "shottr"
+     "skype"
+     "slack"
+     "spotify"
+     "telegram"
+     "unity-hub"
+     "visual-studio-code"
+     "vlc"
+     "zoom"
+-}}
+
+{{ $mas := list
+    "\"1Password for Safari\", id: 1569813296"
+    "\"AdGuard for Safari\", id: 1440147259"
+    "\"Infuse\", id: 1136220934"
+    "\"iStat Menu\", id: 1319778037"
+    "\"Keepa\", id: 1533805339"
+    "\"Keynote\", id: 409183694"
+    "\"Numbers\", id: 409203825"
+    "\"Pages\", id: 409201541"
+    "\"Save to Pocket\", id: 1477385213"
+    "\"Spotica Menu\", id: 570549457"
+    "\"Xcode\", id: 497799835"
+-}}
+
+info "Installing packages..."
+
+# Install all available Software Updates
+sudo softwareupdate -ia
+brew update
+brew autoremove
+brew cleanup
+brew upgrade
+
+export HOMEBREW_CASK_OPTS="--no-quarantine --force --overwrite"
+brew bundle --no-lock --file=/dev/stdin <<EOF
+
+{{ range ($taps | sortAlpha | uniq) -}}
+tap "{{ . }}"
+{{ end -}}
+
+{{ range ($brews | sortAlpha | uniq) -}}
+brew "{{ . }}"
+{{ end -}}
+
+{{ range ($casks | sortAlpha | uniq) -}}
+cask "{{ . }}"
+{{ end -}}
+
+EOF
+
+#==============================================================================
+# Configure fish shell
+#==============================================================================
+
+info "Configuring fish shell..."
+if ! grep -q $(which fish) /etc/shells; then
+     sudo bash -c 'echo $(which fish) >> /etc/shells'
+     chsh -s $(which fish)
+fi
+
+#==============================================================================
+# Configure python
+#==============================================================================
+
+info "Configuring Python..."
+
+# install maintained python versions
+brew install openssl readline sqlite3 xz zlib pyenv
+
+{{ $py_major_versions := list
+     "8"
+     "9"
+     "10"
+     "11"
+-}}
+
+{{ range ($py_major_versions) -}}
+
+pyenv install --skip-existing 3.{{ . }}
+# delete all versions of this major except for the most recent (sed -e '$ d')
+pyenv versions | grep " 3\.{{ . }}" | sed -e '$ d' | xargs pyenv uninstall -f
+pyenv global 3.{{ . }}
+
+{{ end -}}
+
+# install pipx
+brew install pipx
+pipx ensurepath
+pipx upgrade-all
+
+# install python utilities
+pipx install black
+pipx install flake8
+pipx install isort
+pipx install mypy
+pipx install nox
+pipx install pre-commit
+pipx install pylint
+pipx install pytest
+pipx install tox
+
+pipx inject pytest pytest-clarity
+pipx inject pytest pytest-sugar
+
+# install poetry
+pipx install poetry
+# store python virtual environments in the package s directory
+poetry config virtualenvs.in-project true
+
+#==============================================================================
+# Install docker + colima
+#==============================================================================
+
+info "Configuring docker + colima..."
+
+brew install colima docker docker-compose docker-credential-helper
+# Compose is now a Docker plugin. For Docker to find this plugin, symlink it
+mkdir -p ~/.docker/cli-plugins
+ln -sfn /opt/homebrew/opt/docker-compose/bin/docker-compose ~/.docker/cli-plugins/docker-compose
+
+#==============================================================================
+# Install NodeJS packages
+#==============================================================================
+
+npm_packages=(
+    serverless
+    @commitlint/cli
+    @commitlint/config-conventional
+)
+
+info "Installing global NodeJS packages..."
+npm update -g
+npm install -g "${npm_packages[@]}"
+
+#==============================================================================
+# Misc
+#==============================================================================
+
+defaults -currentHost write com.apple.screensaver moduleDict -dict moduleName Brooklyn path "$HOME/Library/Screen Savers/Brooklyn.saver"
