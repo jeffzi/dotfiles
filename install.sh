@@ -23,7 +23,7 @@ error() {
 
 OS=$(uname | tr '[:upper:]' '[:lower:]')
 case $OS in
-  darwin*)  info "Installing Xcode Command Line Tools"; xcode-select --install 2> /dev/null ;; 
+  darwin*)  info "Installing Xcode Command Line Tools"; xcode-select --install 2> /dev/null ;;
   linux*)   error "Linux not supported!" ;;
   msys*)    error "Windows not supported!" ;;
   cygwin*)  error "Windows not supported!" ;;
@@ -35,7 +35,7 @@ esac
 # Chezmoi
 #==============================================================================
 
-set -e 
+set -e
 
 info "Init chezmoi"
 
@@ -55,4 +55,4 @@ fi
 
 # exec: replace current process with chezmoi init
 exec "$chezmoi" init --apply https://gitlab.com/jeffzi/dotfiles
-    
+
