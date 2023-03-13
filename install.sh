@@ -55,4 +55,3 @@ fi
 
 # exec: replace current process with chezmoi init
 exec "$chezmoi" init --apply https://gitlab.com/jeffzi/dotfiles
-
