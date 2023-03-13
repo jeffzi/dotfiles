@@ -3,15 +3,41 @@
 # Install remotely from single shell command
 # Usage : sh -c "$(curl -fsSL https://gitlab.com/jeffzi/dotfiles/-/raw/main/install.sh)"
 
-case "$OSTYPE" in
-  darwin*)  echo "Installing Xcode Command Line Tools"; xcode-select --install 2> /dev/null ;; 
-  linux*)   echo "Linux not supported!" ;;
-  msys*)    echo "Windows not supported!" ;;
-  cygwin*)  echo "Windows not supported!" ;;
-  *)        echo "Unsupported OS: $OSTYPE" ;;
+#==============================================================================
+# Helpers
+#==============================================================================
+
+RED=$(tput setaf 1)
+CYAN=$(tput setaf 6)
+BOLD=$(tput bold)
+RESET=$(tput sgr0)
+
+info() {
+    echo "==> ${BOLD}${CYAN}$1${RESET}"
+}
+
+error() {
+    echo "==> ${BOLD}${RED}$1${RESET}"
+    exit 1
+}
+
+OS=$(uname | tr '[:upper:]' '[:lower:]')
+case $OS in
+  darwin*)  info "Installing Xcode Command Line Tools"; xcode-select --install 2> /dev/null ;; 
+  linux*)   error "Linux not supported!" ;;
+  msys*)    error "Windows not supported!" ;;
+  cygwin*)  error "Windows not supported!" ;;
+  *)        error "Unsupported OS: $OS" ;;
 esac
 
-set -e
+
+#==============================================================================
+# Chezmoi
+#==============================================================================
+
+set -e 
+
+info "Init chezmoi"
 
 if [ ! "$(command -v chezmoi)" ]; then
   bin_dir="$HOME/.local/bin"
@@ -21,8 +47,7 @@ if [ ! "$(command -v chezmoi)" ]; then
   elif [ "$(command -v wget)" ]; then
     sh -c "$(wget -qO- https://git.io/chezmoi)" -- -b "$bin_dir"
   else
-    echo "To install chezmoi, you must have curl or wget installed." >&2
-    exit 1
+    error "To install chezmoi, you must have curl or wget installed." >&2
   fi
 else
   chezmoi=chezmoi
@@ -30,3 +55,4 @@ fi
 
 # exec: replace current process with chezmoi init
 exec "$chezmoi" init --apply https://gitlab.com/jeffzi/dotfiles
+    
