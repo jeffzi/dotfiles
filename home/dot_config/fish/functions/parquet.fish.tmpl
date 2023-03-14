@@ -1,0 +1,3 @@
+function parquet
+    java -cp '/Users/{{ .chezmoi.username }}/Projects/tools/parquet-cli/target/*:/home/{{ .chezmoi.username }}/Projects/tools/parquet-cli/target/dependency/*' org.apache.parquet.cli.Main $argv
+end
