@@ -1,0 +1,51 @@
+# Don't print a new line at the start of the prompt
+add_newline = false
+
+[character]
+error_symbol = "[✖](bold red)"
+
+[cmd_duration]
+min_time = 1000
+show_milliseconds = true
+show_notifications = true
+style = "underline white"
+
+[directory]
+truncation_length = 5
+
+[git_branch]
+format = '[\($branch\)]($style)'
+
+[git_status]
+conflicted = "✘"
+deleted = "✝"
+format = '([\[$all_status$ahead_behind\]]($style) )'
+staged = "✚"
+stashed = "⚑"
+style = "bold purple"
+
+[time]
+disabled = false
+format = "$time($style) "
+style = "dimmed"
+time_format = "%Y-%m-%d %T"
+
+[aws]
+disabled = true
+
+[gcloud]
+disabled = true
+
+[nodejs]
+disabled = true
+
+[package]
+disabled = true
+
+[python]
+format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+symbol = "py "
+
+[rlang]
+format = "[$symbol($version )]($style)"
+symbol = "R "
