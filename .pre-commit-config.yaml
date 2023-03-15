@@ -20,6 +20,9 @@ repos:
     rev: v2.7.1
     hooks:
       - id: prettier
+        additional_dependencies:
+          - prettier@2.7.1
+          - "@prettier/plugin-xml@2.2.0"
 
   - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
     rev: v9.4.0

@@ -198,6 +198,16 @@ sudo pmset -b sleep 10
 # Sleep the display after 5 minutes
 sudo pmset -a displaysleep 5
 
+
+#==============================================================================
+# iTerm2
+#==============================================================================
+
+# Specify the preferences directory
+defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string "~/.config/iterm2prefs"
+# Tell iTerm2 to use the custom preferences in the directory
+defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
+
 #==============================================================================
 # Kill affected applications
 #==============================================================================
