@@ -227,4 +227,8 @@ npm install -g "${npm_packages[@]}"
 # Misc
 #==============================================================================
 
+# Add new themes to bat
+bat cache --build
+
+# Add screensaver
 defaults -currentHost write com.apple.screensaver moduleDict -dict moduleName Brooklyn path "$HOME/Library/Screen Savers/Brooklyn.saver"
