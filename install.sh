@@ -21,9 +21,19 @@ error() {
     exit 1
 }
 
+install_xcode() {
+    if [ ! "$(xcode-select -p &> /dev/null)" ]; then
+        xcode-select --install
+    fi
+
+    until [ "$(xcode-select -p &> /dev/null)" ]; do
+        sleep 5
+    done
+}
+
 OS=$(uname | tr '[:upper:]' '[:lower:]')
 case $OS in
-  darwin*)  info "Installing Xcode Command Line Tools"; xcode-select --install 2> /dev/null ;;
+  darwin*)  install_xcode ;;
   linux*)   error "Linux not supported!" ;;
   msys*)    error "Windows not supported!" ;;
   cygwin*)  error "Windows not supported!" ;;
