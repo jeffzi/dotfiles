@@ -108,10 +108,17 @@ info "Installing packages..."
 
 # Install all available Software Updates
 sudo softwareupdate -ia
-brew update
-brew autoremove
-brew cleanup
-brew upgrade
+
+if [ ! "$(command -v brew)" ]; then
+then
+     info "Installing homebrew..."
+     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+else
+     brew update
+     brew autoremove
+     brew cleanup
+     brew upgrade
+fi
 
 export HOMEBREW_CASK_OPTS="--no-quarantine --force --overwrite"
 brew bundle --no-lock --file=/dev/stdin <<EOF
