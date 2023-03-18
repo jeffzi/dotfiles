@@ -21,19 +21,26 @@ error() {
     exit 1
 }
 
-install_xcode() {
+prepare_darwin() {
     if [ ! "$(xcode-select -p &> /dev/null)" ]; then
         xcode-select --install
     fi
 
-    until [ "$(xcode-select -p &> /dev/null)" ]; do
-        sleep 5
+    until $(xcode-select --print-path &> /dev/null); do
+      sleep 5;
     done
+
+    if [ ! "$(command -v brew)" ]; then
+        info "Installing homebrew..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+
+    brew install --cask 1password/tap/1password-cli
 }
 
 OS=$(uname | tr '[:upper:]' '[:lower:]')
 case $OS in
-  darwin*)  install_xcode ;;
+  darwin*)  prepare_darwin ;;
   linux*)   error "Linux not supported!" ;;
   msys*)    error "Windows not supported!" ;;
   cygwin*)  error "Windows not supported!" ;;
