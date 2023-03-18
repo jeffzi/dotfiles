@@ -109,7 +109,7 @@ info "Installing packages..."
 # Install all available Software Updates
 sudo softwareupdate -ia
 
-if [ ! "$(command -v brew)" ]; then
+if [ ! "$(command -v brew)" ];
 then
      info "Installing homebrew..."
      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
