@@ -1,3 +1,8 @@
+# PATH
+fish_add_path /opt/homebrew/bin
+fish_add_path ~/.local/bin
+fish_add_path ~/go
+
 # default editor
 set -gx EDITOR (which code)
 
@@ -9,10 +14,6 @@ abbr -a pjo pj open
 set --erase PYENV_VERSION
 status is-login; and pyenv init --path | source
 status is-interactive; and pyenv init - | source
-
-# go
-set -gx GOPATH $HOME/go
-set -gx PATH $PATH $GOPATH/bin
 
 # exa
 set -Ux EXA_STANDARD_OPTIONS --long --all --group-directories-first --time-style=long-iso
