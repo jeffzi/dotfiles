@@ -14,7 +14,7 @@ style = "underline white"
 truncation_length = 5
 
 [git_branch]
-format = '[\($branch\)]($style)'
+format = '[$symbol$branch(:$remote_branch)]($style) '
 
 [git_status]
 conflicted = "✘"
@@ -33,6 +33,9 @@ time_format = "%Y-%m-%d %T"
 [aws]
 disabled = true
 
+[docker_context]
+disabled = true
+
 [gcloud]
 disabled = true
 
@@ -49,3 +52,6 @@ symbol = "py "
 [rlang]
 format = "[$symbol($version )]($style)"
 symbol = "R "
+
+[vagrant]
+disabled = true
