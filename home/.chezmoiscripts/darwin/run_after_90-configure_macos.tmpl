@@ -4,8 +4,6 @@ set -euo pipefail
 
 {{ template "logging" }}
 
-info "Configuring MacOS..."
-
 # https://github.com/mathiasbynens/dotfiles/blob/main/.macos
 # https://macos-defaults.com/
 
@@ -20,7 +18,7 @@ sudo -v
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 #==============================================================================
-# General UI/UX
+# Hostname
 #==============================================================================
 
 info "Setting computer name to '{{ .hostname }}'"
@@ -29,6 +27,12 @@ sudo scutil --set HostName "{{ .hostname }}"
 sudo scutil --set LocalHostName "{{ .hostname }}"
 sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "{{ .hostname }}"
 dscacheutil -flushcache
+
+#==============================================================================
+# General UI/UX
+#==============================================================================
+
+info "Configuring MacOS..."
 
 # Disable Resume system-wide
 defaults write com.apple.systempreferences NSQuitAlwaysKeepsWindows -bool false
@@ -194,11 +198,3 @@ sudo pmset -a displaysleep 5
 defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string "~/.config/iterm2prefs"
 # Tell iTerm2 to use the custom preferences in the directory
 defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
-
-#==============================================================================
-# Kill affected applications
-#==============================================================================
-
-sudo killall Dock
-sudo killall Finder
-sudo killall Safari
