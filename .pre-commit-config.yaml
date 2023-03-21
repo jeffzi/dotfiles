@@ -1,3 +1,7 @@
+ci:
+  autofix_commit_msg: "chore(pre-commit.ci): autofix"
+  autoupdate_commit_msg: "chore(pre-commit.ci): autoupdate"
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
@@ -17,7 +21,7 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v2.7.1
+    rev: v3.0.0-alpha.6
     hooks:
       - id: prettier
         additional_dependencies:
