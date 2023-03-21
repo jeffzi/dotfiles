@@ -1,0 +1,17 @@
+#!/bin/bash
+
+color() {
+  color_code="$1"
+  shift
+
+  printf "\033[${color_code}m%s\033[0m\n" "$*" >&2
+}
+
+info() {
+  color "0;36" "=> $@"
+}
+
+error() {
+  color "0;31" "$@"
+  exit 1
+}
