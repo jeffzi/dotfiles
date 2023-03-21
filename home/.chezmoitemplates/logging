@@ -15,3 +15,7 @@ error() {
   color "0;31" "$@"
   exit 1
 }
+
+success() {
+  color "1;32" "$@"
+}
