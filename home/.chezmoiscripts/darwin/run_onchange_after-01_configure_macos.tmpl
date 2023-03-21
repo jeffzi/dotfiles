@@ -18,7 +18,7 @@ info() {
 }
 
 
-info "===> Configuring MacOS..."
+info "Configuring MacOS..."
 
 # https://github.com/mathiasbynens/dotfiles/blob/main/.macos
 # https://macos-defaults.com/
@@ -37,7 +37,7 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 # General UI/UX
 #==============================================================================
 
-info "===> Setting computer name to '{{ .hostname }}'"
+info "Setting computer name to '{{ .hostname }}'"
 sudo scutil --set ComputerName "{{ .hostname }}"
 sudo scutil --set HostName "{{ .hostname }}"
 sudo scutil --set LocalHostName "{{ .hostname }}"
