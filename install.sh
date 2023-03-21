@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Install remotely from single shell command
-# Usage : sh -c "$(curl -fsSL https://github.com/jeffzi/dotfiles/-/raw/main/install.sh)"
+# Usage : sh -c "$(curl -fsSL https://raw.githubusercontent.com/jeffzi/dotfiles/main/install.sh)"
 
 #==============================================================================
 # Helpers
@@ -71,8 +71,8 @@ if [ ! "$(command -v chezmoi)" ]; then
   fi
 else
   chezmoi=chezmoi
->fi
+fi
 
 info "Running chezmoi..."
 # exec: replace current process with chezmoi init
-exec "$chezmoi" jeffzi init --ssh --apply
+exec "$chezmoi" init jeffzi --ssh --apply
