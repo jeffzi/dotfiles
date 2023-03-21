@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eufo pipefail
+set -eu
 
 #==============================================================================
 # Helpers
@@ -194,21 +194,27 @@ pipx ensurepath
 pipx upgrade-all
 
 # install python utilities
-pipx install black
-pipx install flake8
-pipx install isort
-pipx install mypy
-pipx install nox
-pipx install pre-commit
-pipx install pylint
-pipx install pytest
-pipx install tox
+{{ $py_packages := list
+     "black"
+     "flake8"
+     "isort"
+     "mypy"
+     "nox"
+     "poetry"
+     "pre-commit"
+     "pylint"
+     "pytest"
+     "tox"
+-}}
 
-pipx inject pytest pytest-clarity
-pipx inject pytest pytest-sugar
+info "Installing pipx utilities..."
+# Install pipx package if not already installed
+{{ range ($py_packages) -}}
+(pipx list --short | grep -q "{{ . }}") || pipx install "{{ . }}"
+{{ end -}}
 
-# install poetry
-pipx install poetry
+pipx inject pytest pytest-clarity &> /dev/null
+pipx inject pytest pytest-sugar &> /dev/null
 # store python virtual environments in the package s directory
 poetry config virtualenvs.in-project true
 
@@ -227,17 +233,24 @@ ln -sfn /opt/homebrew/opt/docker-compose/bin/docker-compose ~/.docker/cli-plugin
 # Install NodeJS packages
 #==============================================================================
 
-npm_packages=(
-    serverless
-    @commitlint/cli
-    @commitlint/config-conventional
-    cz-conventional-changelog
-    commitizen
-)
+{{ $npm_packages := list
+    "serverless"
+    "@commitlint/cli"
+    "@commitlint/config-conventional"
+    "cz-conventional-changelog"
+    "commitizen"
+-}}
+
+brew install --quiet npm
+
+info "Updating global NodeJS packages..."
+[ "$(npm outdated)" != "" ] && npm update -g --loglevel=error
 
 info "Installing global NodeJS packages..."
-npm update -g
-npm install -g "${npm_packages[@]}"
+# Install node package if not already installed
+{{ range ($npm_packages) -}}
+npm list -g "{{ . }}" &> /dev/null || npm install -g --loglevel=error "{{ . }}"
+{{ end -}}
 
 #==============================================================================
 # Misc
