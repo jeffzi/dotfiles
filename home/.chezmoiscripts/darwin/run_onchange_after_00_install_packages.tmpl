@@ -18,6 +18,9 @@ info() {
 # Install packages
 #==============================================================================
 
+info "Updating App Store..."
+sudo softwareupdate -ia
+
 {{ $taps := list
      "homebrew/cask-drivers"
      "homebrew/cask-fonts"
@@ -30,7 +33,6 @@ info() {
      "bat"
      "exa"
      "fish"
-     "gh"
      "git-lfs"
      "git"
      "go-task"
@@ -104,22 +106,20 @@ info() {
     "\"Xcode\", id: 497799835"
 -}}
 
-info "Installing packages..."
-
-# Install all available Software Updates
-sudo softwareupdate -ia
 
 if [ ! "$(command -v brew)" ];
 then
      info "Installing homebrew..."
      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else
+     info "Updating brew packages..."
      brew update
      brew autoremove
      brew cleanup
      brew upgrade
 fi
 
+info "Installing brew packages..."
 brew install --quiet mas
 export HOMEBREW_CASK_OPTS="--no-quarantine --force --overwrite"
 brew bundle --no-lock --file=/dev/stdin <<EOF
@@ -153,6 +153,7 @@ if ! $(mas list | grep -q Xcode); then
           sudo xcodebuild -license accept
      fi
 fi
+
 #==============================================================================
 # Configure fish shell
 #==============================================================================
@@ -170,7 +171,7 @@ fi
 info "Configuring Python..."
 
 # install maintained python versions
-brew install openssl readline sqlite3 xz pyenv
+ brew install --quiet openssl readline sqlite3 xz pyenv
 
 {{ $py_major_versions := list
      "8"
@@ -189,8 +190,7 @@ pyenv global 3.{{ . }}
 {{ end -}}
 
 # install pipx
-brew install pipx
-pipx ensurepath
+brew install --quiet pipx
 pipx upgrade-all
 
 # install python utilities
@@ -224,7 +224,7 @@ poetry config virtualenvs.in-project true
 
 info "Configuring docker + colima..."
 
-brew install colima docker docker-compose docker-credential-helper
+brew install --quiet colima docker docker-compose docker-credential-helper
 # Compose is now a Docker plugin. For Docker to find this plugin, symlink it
 mkdir -p ~/.docker/cli-plugins
 ln -sfn /opt/homebrew/opt/docker-compose/bin/docker-compose ~/.docker/cli-plugins/docker-compose
@@ -256,7 +256,7 @@ npm list -g "{{ . }}" &> /dev/null || npm install -g --loglevel=error "{{ . }}"
 # Misc
 #==============================================================================
 
-# Add new themes to bat
+info "Adding bat themes..."
 bat cache --build
 
 # Add screensaver
