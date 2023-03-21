@@ -1,8 +1,6 @@
-{{- $username := "jf" -}}
-
 [data]
-    username = "{{ $username }}"
-    hostname = "{{ printf "%s-%s" $username .chezmoi.os  -}}"
+    username = "jeffzi"
+    hostname = "{{ printf "%s-%s" "jf" .chezmoi.os  -}}"
 
 [edit]
     command = "code"
