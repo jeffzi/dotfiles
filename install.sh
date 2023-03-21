@@ -7,35 +7,40 @@
 # Helpers
 #==============================================================================
 
-RED=$(tput setaf 1)
-CYAN=$(tput setaf 6)
-BOLD=$(tput bold)
-RESET=$(tput sgr0)
+set -eu
+
+color() {
+  color_code="$1"
+  shift
+
+  printf "\033[${color_code}m%s\033[0m\n" "$*" >&2
+}
 
 info() {
-    echo "${BOLD}${CYAN}=> $1${RESET}"
+  color "0;36" "=> $@"
 }
 
 error() {
-    echo "${BOLD}${RED}=> $1${RESET}"
-    exit 1
+  color "0;31" "$@"
+  exit 1
 }
 
 prepare_darwin() {
-    if [ ! "$(xcode-select -p &> /dev/null)" ]; then
-        xcode-select --install
-    fi
+  xcode-select -p &> /dev/null
+  if [ $? -ne 0 ]; then
+    xcode-select --install
+  fi
 
-    until $(xcode-select --print-path &> /dev/null); do
-      sleep 5;
-    done
+  until $(xcode-select -p &> /dev/null); do
+    sleep 5;
+  done
 
-    if [ ! "$(command -v brew)" ]; then
-        info "Installing homebrew..."
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    fi
+  if [ ! "$(command -v brew)" ]; then
+    info "Installing homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  fi
 
-    brew install --cask 1password/tap/1password-cli
+  brew install --quiet --cask 1password/tap/1password-cli
 }
 
 OS=$(uname | tr '[:upper:]' '[:lower:]')
@@ -52,23 +57,22 @@ esac
 # Chezmoi
 #==============================================================================
 
-set -e
-
-info "Init chezmoi"
 
 if [ ! "$(command -v chezmoi)" ]; then
   bin_dir="$HOME/.local/bin"
   chezmoi="$bin_dir/chezmoi"
+  info "Installing chezmoi..."
   if [ "$(command -v curl)" ]; then
-    sh -c "$(curl -fsSL https://git.io/chezmoi)" -- -b "$bin_dir"
+  sh -c "$(curl -fsSL https://git.io/chezmoi)" -- -b "$bin_dir"
   elif [ "$(command -v wget)" ]; then
-    sh -c "$(wget -qO- https://git.io/chezmoi)" -- -b "$bin_dir"
+  sh -c "$(wget -qO- https://git.io/chezmoi)" -- -b "$bin_dir"
   else
-    error "To install chezmoi, you must have curl or wget installed." >&2
+  error "To install chezmoi, you must have curl or wget installed." >&2
   fi
 else
   chezmoi=chezmoi
-fi
+>fi
 
+info "Running chezmoi..."
 # exec: replace current process with chezmoi init
 exec "$chezmoi" jeffzi init --ssh --apply
