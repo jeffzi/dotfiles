@@ -8,9 +8,6 @@ set -eu
 # Install packages
 #==============================================================================
 
-info "Updating App Store..."
-sudo softwareupdate -ia
-
 {{ $taps := list
      "homebrew/cask-drivers"
      "homebrew/cask-fonts"
