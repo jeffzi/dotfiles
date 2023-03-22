@@ -5,6 +5,14 @@ set -euo pipefail
 {{ template "logging" }}
 
 #==============================================================================
+# Mackup
+#==============================================================================
+
+info "Restoring configs via Mackup..."
+brew install --quiet mackup
+mackup restore -f
+
+#==============================================================================
 # iTerm2
 #==============================================================================
 
@@ -33,7 +41,7 @@ add_login_item() {
   fi
 }
 
-{{ $apps := dict 
+{{ $apps := dict
       "1Password" "true"
       "AltServer" "true"
       "Amethyst" "true"
