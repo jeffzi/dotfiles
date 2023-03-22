@@ -1,0 +1,57 @@
+#!/bin/bash
+
+set -euo pipefail
+
+{{ template "logging" }}
+
+#==============================================================================
+# iTerm2
+#==============================================================================
+
+info "Setting up iTerm2 preferences..."
+
+# Specify the preferences directory
+defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string "~/.config/iterm2prefs"
+# Tell iTerm2 to use the custom preferences in the directory
+defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
+
+#==============================================================================
+# Login items
+#==============================================================================
+
+info "Adding login items..."
+
+list_login_items() {
+  osascript -e 'tell application "System Events" to get the name of every login item'
+}
+
+add_login_item() {
+  path="/Applications/$1.app"
+  if [[ -d $path ]]
+  then
+    osascript -e "tell application \"System Events\" to make login item at end with properties {name: \"$1\",path:\"$path\",hidden:$2}"
+  fi
+}
+
+{{ $apps := dict 
+      "1Password" "true"
+      "AltServer" "true"
+      "Amethyst" "true"
+      "Bartender 4" "true"
+      "BetterDisplay" "true"
+      "BetterDisplay" "true"
+      "iStat Menus" "true"
+      "iTerm" "true"
+      "Numi" "true"
+      "pCloud Drive" "true"
+      "Raycast" "true"
+      "Shottr" "true"
+      "Spotify" "true"
+
+-}}
+
+{{ range $app, $hidden := $apps -}}
+
+(list_login_items | grep -q "{{ $app }}") || add_login_item "{{ $app }}" "{{ $hidden }}"
+
+{{ end -}}
