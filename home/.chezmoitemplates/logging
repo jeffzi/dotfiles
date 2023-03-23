@@ -8,7 +8,7 @@ color() {
 }
 
 info() {
-  color "0;36" "=> $@"
+  color "0;36" "=> $*"
 }
 
 error() {
