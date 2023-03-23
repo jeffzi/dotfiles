@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# Install remotely from single shell command
-# Usage : sh -c "$(curl -fsSL https://raw.githubusercontent.com/jeffzi/dotfiles/main/install.sh)"
-
 #==============================================================================
 # Helpers
 #==============================================================================
@@ -17,7 +14,7 @@ color() {
 }
 
 info() {
-  color "0;36" "=> $@"
+  color "0;36" "=> $*"
 }
 
 error() {
@@ -26,15 +23,6 @@ error() {
 }
 
 prepare_darwin() {
-  xcode-select -p &> /dev/null
-  if [ $? -ne 0 ]; then
-    xcode-select --install
-  fi
-
-  until $(xcode-select -p &> /dev/null); do
-    sleep 5;
-  done
-
   if [ ! "$(command -v brew)" ]; then
     info "Installing homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
