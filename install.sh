@@ -27,6 +27,7 @@ prepare_darwin() {
     info "Installing homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
+  eval "$(/opt/homebrew/bin/brew shellenv)"
 
   brew install --quiet --cask 1password/tap/1password-cli
 }
