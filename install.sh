@@ -29,7 +29,10 @@ prepare_darwin() {
   fi
   eval "$(/opt/homebrew/bin/brew shellenv)"
 
-  brew install --quiet --cask 1password/tap/1password-cli
+  info "Installing 1password..."
+  brew install --quiet --cask 1password/tap/1password-cli 1password
+  info "Log in now to the 1password app so that chezmoi can pull secrets later"
+  open -a 1password
 }
 
 OS=$(uname | tr '[:upper:]' '[:lower:]')
@@ -50,11 +53,11 @@ if [ ! "$(command -v chezmoi)" ]; then
   chezmoi="$bin_dir/chezmoi"
   info "Installing chezmoi..."
   if [ "$(command -v curl)" ]; then
-  sh -c "$(curl -fsSL https://git.io/chezmoi)" -- -b "$bin_dir"
+    sh -c "$(curl -fsSL https://git.io/chezmoi)" -- -b "$bin_dir"
   elif [ "$(command -v wget)" ]; then
-  sh -c "$(wget -qO- https://git.io/chezmoi)" -- -b "$bin_dir"
+    sh -c "$(wget -qO- https://git.io/chezmoi)" -- -b "$bin_dir"
   else
-  error "To install chezmoi, you must have curl or wget installed." >&2
+    error "To install chezmoi, you must have curl or wget installed."
   fi
 else
   chezmoi=chezmoi
@@ -62,4 +65,4 @@ fi
 
 info "Running chezmoi..."
 # exec: replace current process with chezmoi init
-exec "$chezmoi" init jeffzi --ssh --apply
+exec "$chezmoi" init jeffzi --apply
