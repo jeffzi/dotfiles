@@ -31,7 +31,7 @@ prepare_darwin() {
 
   info "Installing 1password..."
   brew install --quiet --cask 1password/tap/1password-cli 1password
-  info "Log in now to the 1password app so that chezmoi can pull secrets later"
+  info "Log in now to the 1password app, enable settings/connect with 1Password CLI"
   open -a /Applications/1Password.app
 }
 
