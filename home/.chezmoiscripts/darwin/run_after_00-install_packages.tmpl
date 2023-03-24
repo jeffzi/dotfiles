@@ -206,7 +206,7 @@ info "Installing pipx utilities..."
 pipx inject pytest pytest-clarity &> /dev/null
 pipx inject pytest pytest-sugar &> /dev/null
 # store python virtual environments in the package s directory
-poetry config virtualenvs.in-project true
+~/.local/bin/poetry config virtualenvs.in-project true
 
 #==============================================================================
 # Install docker + colima
