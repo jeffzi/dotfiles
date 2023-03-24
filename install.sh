@@ -32,7 +32,7 @@ prepare_darwin() {
   info "Installing 1password..."
   brew install --quiet --cask 1password/tap/1password-cli 1password
   info "Log in now to the 1password app so that chezmoi can pull secrets later"
-  open -a 1password
+  open -a /Applications/1Password.app
 }
 
 OS=$(uname | tr '[:upper:]' '[:lower:]')
