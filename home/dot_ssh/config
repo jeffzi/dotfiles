@@ -1,6 +1,6 @@
 Host *
   IdentityAgent ~/.1password/agent.sock
-  
+
 Host github-personal
     HostName github.com
     User git
