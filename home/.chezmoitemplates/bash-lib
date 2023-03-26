@@ -1,0 +1,53 @@
+set -eu
+
+color() {
+  color_code="$1"
+  shift
+
+  printf "\033[${color_code}m%s\033[0m\n" "$*" >&2
+}
+
+info() {
+  color "0;36" "=> $*"
+}
+
+error() {
+  color "0;31" "$@"
+  exit 1
+}
+
+success() {
+  color "1;32" "$@"
+}
+
+manual_action() {
+  color "1;33" "$@"
+}
+
+sudo() {
+  # source: https://github.com/felipecrs/dotfiles/blob/master/home/.chezmoitemplates/scripts-library
+  local exec=false
+  echo "sudo "  "$@"
+  if [[ "$1" == "exec" ]]; then
+    shift
+    exec=true
+  fi
+
+  if [[ "$(id -u)" -eq 0 ]]; then
+    if [[ "${exec}" == "true" ]]; then
+      exec "$@"
+    else
+      "$@"
+    fi
+  else
+    if ! (command sudo --non-interactive true 2>/dev/null); then
+      manual_action "Root privileges are required, please enter your password below"
+      command sudo --validate
+    fi
+    if [[ "${exec}" == "true" ]]; then
+      exec sudo "$@"
+    else
+      command sudo "$@"
+    fi
+  fi
+}
