@@ -7,7 +7,7 @@ fish_add_path ~/go
 set -gx EDITOR (which code)
 
 # https://github.com/oh-my-fish/plugin-pj
-set -gx PROJECT_PATHS ~/Projects ~/Projects/dev ~/Projects/work/metamoki ~/Projects/work/metamoki/data-engineering/projects ~/Projects/work/metamoki/data-engineering/libs
+set -gx PROJECT_PATHS ~/Projects ~/Projects/personal ~/Projects/work/metamoki ~/Projects/work/metamoki/data-engineering/projects ~/Projects/work/metamoki/data-engineering/libs
 abbr -a pjo pj open
 
 # pyenv init
