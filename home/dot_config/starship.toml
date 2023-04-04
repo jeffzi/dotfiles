@@ -47,6 +47,7 @@ disabled = true
 
 [python]
 format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+python_binary = ["./venv/bin/python", "python3", "python", "python2"]
 symbol = "py "
 
 [rlang]
