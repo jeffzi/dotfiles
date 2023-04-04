@@ -29,7 +29,7 @@ set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
 set -gx HOMEBREW_CASK_OPTS --no-quarantine
 
 # fish theme
-base16-material-darker
+base16-snazzy
 
 # starship prompt
 starship init fish | source
