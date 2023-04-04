@@ -231,11 +231,14 @@ ln -sfn /opt/homebrew/bin/docker-buildx ~/.docker/cli-plugins/docker-buildx
 #==============================================================================
 
 {{ $npm_packages := list
-    "serverless"
     "@commitlint/cli"
     "@commitlint/config-conventional"
-    "cz-conventional-changelog"
     "commitizen"
+    "cz-conventional-changelog"
+    "serverless"
+    "serverless-latest-layer-version"
+    "serverless-plugin-aws-alerts"
+    "serverless-python-requirements"
 -}}
 
 brew install --quiet npm
