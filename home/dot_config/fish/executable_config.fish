@@ -36,3 +36,7 @@ starship init fish | source
 
 # no greeting
 set -g fish_greeting
+
+# increase the maximum number of open file descriptors
+# default is 256
+ulimit -n 10240
