@@ -15,6 +15,7 @@
 {{ $brews := list
      "awscli"
      "bash"
+     "asdf"
      "bat"
      "exa"
      "fish"
@@ -62,7 +63,6 @@
      "insomnia"
      "iterm2"
      "kap"
-     "keeper-password-manager"
      "keka"
      "muzzle"
      "numi"
@@ -163,7 +163,7 @@ fi
 info "Configuring Python..."
 
 # install maintained python versions
- brew install --quiet openssl readline sqlite3 xz pyenv
+ brew install --quiet openssl readline sqlite3 xz pyenv pyenv-virtualenv
 
 {{ $py_major_versions := list
      "8"
@@ -254,6 +254,32 @@ info "Installing global NodeJS packages..."
 {{ range ($npm_packages) -}}
 npm list -g "{{ . }}" &> /dev/null || npm install -g --loglevel=error "{{ . }}"
 {{ end -}}
+
+#==============================================================================
+# Install LUA
+#==============================================================================
+
+asdf plugin-add lua https://github.com/Stratus3D/asdf-lua.git
+asdf plugin-add luajit https://github.com/smashedtoatoms/asdf-luaJIT.git
+
+{{ $lua_versions := list
+     "3"
+     "2"
+     "1"
+-}}
+
+{{ range ($lua_versions) -}}
+
+# delete all versions of this major except for the most recent (sed -e '$ d')
+lua_version=$(asdf list-all lua | grep "5\.{{ . }}" | tail -n1)
+asdf install lua $lua_version
+asdf global lua 5.$lua_version
+
+{{ end -}}
+
+luajit_version=$(asdf list-all luajit | tail -n1)
+asdf install luajit $luajit_version
+asdf global luajit luajit_versionn
 
 #==============================================================================
 # Misc
