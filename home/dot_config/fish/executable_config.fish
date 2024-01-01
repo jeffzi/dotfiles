@@ -28,6 +28,9 @@ set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
 # homebrew
 set -gx HOMEBREW_CASK_OPTS --no-quarantine
 
+# asdf
+source /opt/homebrew/opt/asdf/libexec/asdf.fish
+
 # fish theme
 base16-snazzy
 

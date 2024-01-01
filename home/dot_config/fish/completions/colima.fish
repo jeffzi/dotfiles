@@ -134,7 +134,7 @@ function __colima_prepare_completions
             # real completion which the shell will expand immediately.
             set -l split (string split --max 1 \t $__colima_comp_results[1])
 
-            # Fish won't {{ .chezmoi.command }} a space if the completion ends with any
+            # Fish won't apply a space if the completion ends with any
             # of the following characters: @=/:.,
             set -l lastChar (string sub -s -1 -- $split)
             if not string match -r -q "[@=/:.,]" -- "$lastChar"
