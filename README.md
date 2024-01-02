@@ -8,7 +8,7 @@ MacOS dotfiles managed with [chezmoi](https://www.chezmoi.io) and
 The username on the machine must be `jeffzi` to match
 [chezmoi's configuration](home/.chezmoi.toml.tmpl) and apply dotfiles properly.
 
-1. Give the terminal [full-disk access]( https://www.alfredapp.com/help/troubleshooting/indexing/terminal-full-disk-access/).
+1. Give the terminal [full-disk access](https://www.alfredapp.com/help/troubleshooting/indexing/terminal-full-disk-access/).
 2. Install remotely from single shell command
 
 ```sh
