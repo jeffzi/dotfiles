@@ -20,6 +20,13 @@ hs.screen.watcher.new(set_screen_resolution):start()
 -- Switch on/off external display (shared with Desktop machine)
 -- ------------------------------------------------------------
 
+local desk_log = hs.logger.new("display", "debug")
+
+-- Fix for currentNetwork returning nil on MacOS Sonoma
+-- This will add Hammerspoon to Settings/Privacy & Security/Location Services where we need to enable it.
+-- https://github.com/Hammerspoon/hammerspoon/issues/3537#issuecomment-1743870568
+hs.location.get()
+
 local currentNetwork = hs.wifi.currentNetwork
 local home_ssid = "zheli"
 local desktop_address = "192.168.1.85"
@@ -46,8 +53,6 @@ local function is_anker_hub_connected()
    return false
 end
 
-local desk_log = hs.logger.new("display", "debug")
-
 local function run_shortcut(shortcut)
    desk_log.i(string.format("Running %s shortcut...", shortcut))
    local success = os.execute(string.format("shortcuts run '%s'", shortcut))
@@ -61,6 +66,7 @@ end
 local function desk_on()
    desk_log.i("Running desk_on function...")
    if not is_home() then
+      desk_log.i("Not home, don't switch plug on.")
       return
    end
    if is_anker_hub_connected() then
@@ -73,6 +79,7 @@ local ping = hs.network.ping.ping
 local function desk_off()
    desk_log.i("Running desk_off function...")
    if not is_home() then
+      desk_log.i("Not home, don't switch plug off.")
       return
    end
    -- Switch off display only when Desktop is not awake.
