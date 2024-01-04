@@ -1,5 +1,13 @@
 local inspect = hs.inspect.inspect
 
+local function notification(title, is_error)
+   local icon = is_error and "NSCaution" or "NSInfo"
+   hs.notify
+      .new({ title = title, withdrawAfter = 5 })
+      :contentImage(hs.image.imageFromName(icon))
+      :send()
+end
+
 -- -----------------
 -- Screen management
 -- -----------------
@@ -57,16 +65,21 @@ local function run_shortcut(shortcut)
    desk_log.i(string.format("Running %s shortcut...", shortcut))
    local success = os.execute(string.format("shortcuts run '%s'", shortcut))
    if not success then
-      desk_log.e(string.format("Failed to run `shortcuts %s'`", shortcut))
+      local error = string.format("Failed to run `shortcuts %s'`", shortcut)
+      desk_log.e(error)
+      notification(error, true)
+      return false
    else
       desk_log.i("done.")
+      notification(shortcut)
+      return true
    end
 end
 
 local function desk_on()
    desk_log.i("Running desk_on function...")
    if not is_home() then
-      desk_log.i("Not home, don't switch plug on.")
+      notification("Not home, don't switch on the plug.")
       return
    end
    if is_anker_hub_connected() then
@@ -79,7 +92,7 @@ local ping = hs.network.ping.ping
 local function desk_off()
    desk_log.i("Running desk_off function...")
    if not is_home() then
-      desk_log.i("Not home, don't switch plug off.")
+      notification("Not home, don't switch off the plug.")
       return
    end
    -- Switch off display only when Desktop is not awake.
