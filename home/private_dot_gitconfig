@@ -23,3 +23,5 @@
     path = ~/.gitconfig-personal
 [includeIf "gitdir:~/Projects/work/"]
     path = ~/.gitconfig-work
+[init]
+	defaultBranch = main
