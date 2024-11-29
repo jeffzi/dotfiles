@@ -36,8 +36,17 @@ disabled = true
 [docker_context]
 disabled = true
 
+[fennel]
+format = "[$symbol ($version )]($style)"
+symbol = ""
+style= 'bold yellow'
+
 [gcloud]
 disabled = true
+
+[lua]
+format = "[$symbol ($version )]($style)"
+symbol = ""
 
 [nodejs]
 disabled = true
@@ -46,13 +55,14 @@ disabled = true
 disabled = true
 
 [python]
-format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+format = '[${symbol} ${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
 python_binary = ["./venv/bin/python", "python3", "python", "python2"]
-symbol = "py "
+symbol = ""
+style= 'bold green'
 
 [rlang]
-format = "[$symbol($version )]($style)"
-symbol = "R "
+format = "[$symbol ($version )]($style)"
+symbol = "R"
 
 [vagrant]
 disabled = true
