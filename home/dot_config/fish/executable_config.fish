@@ -28,12 +28,8 @@ set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
 set -gx HOMEBREW_CASK_OPTS --no-quarantine
 
 # Lua
-
 source ~/Projects/tools/lua/luajit/bin/activate.fish
 set -gx LUA_INIT "local ok, ic = pcall(require, 'icecream'); if ok and type(ic.export) == 'function' then ic:export() end"
-
-# fish theme
-base16-snazzy
 
 # starship prompt
 starship init fish | source

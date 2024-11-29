@@ -4,8 +4,8 @@ function lt --wraps='exa' --description "Replace tree with eza"
 
     if test -z "$has_L_arg"
         # If no -L argument, add -L1 to the command
-        eza $base_args -L1 $argv
+        command eza $base_args -L1 $argv
     else
-        eza $base_args $argv
+        command eza $base_args $argv
     end
 end
