@@ -13,11 +13,11 @@ osascript -e 'tell application "System Preferences" to quit'
 # Hostname
 #==============================================================================
 
-info "Setting computer name to '{{ .hostname }}'"
-sudo scutil --set ComputerName "{{ .hostname }}"
-sudo scutil --set HostName "{{ .hostname }}"
-sudo scutil --set LocalHostName "{{ .hostname }}"
-sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "{{ .hostname }}"
+info "Setting computer name to '{{ chezmoi.hostname }}'"
+sudo scutil --set ComputerName "{{ chezmoi.hostname }}"
+sudo scutil --set HostName "{{ chezmoi.hostname }}"
+sudo scutil --set LocalHostName "{{ chezmoi.hostname }}"
+sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "{{ chezmoi.hostname }}"
 dscacheutil -flushcache
 
 #==============================================================================
