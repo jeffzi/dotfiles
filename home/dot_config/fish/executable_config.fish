@@ -27,8 +27,10 @@ set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
 # homebrew
 set -gx HOMEBREW_CASK_OPTS --no-quarantine
 
-# asdf
-source /opt/homebrew/opt/asdf/libexec/asdf.fish
+# Lua
+
+source ~/Projects/tools/lua/luajit/bin/activate.fish
+set -gx LUA_INIT "local ok, ic = pcall(require, 'icecream'); if ok and type(ic.export) == 'function' then ic:export() end"
 
 # fish theme
 base16-snazzy
