@@ -12,17 +12,20 @@
 -}}
 
 {{ $brews := list
-     "asdf"
      "awscli"
      "bash"
      "bat"
-     "exa"
+     "clang-format"
+     "eza"
      "fish"
      "git-lfs"
      "git"
      "go-task"
      "htop"
      "jq"
+     "lazygit"
+     "llvm"
+     "lua-language-server"
      "mackup"
      "mas"
      "media-info"
@@ -32,7 +35,6 @@
      "starship"
      "stylua"
      "tldr"
-     "tree"
      "wget"
 -}}
 
@@ -54,6 +56,7 @@
      "discord"
      "doll"
      "eurkey"
+     "font-fira-code-nerd-font"
      "font-hack-nerd-font"
      "font-jetbrains-mono-nerd-font"
      "google-chrome"
@@ -67,19 +70,16 @@
      "keepingyouawake"
      "keka"
      "mullvad-browser"
-     "muzzle"
      "protonvpn"
      "raycast"
      "shottr"
-     "skype"
      "slack"
      "spaceid"
      "spotify"
-     "telegram"
+     "tableau"
      "visual-studio-code"
      "vlc"
      "whatsapp"
-     "zoom"
 -}}
 
 {{ $mas := list
@@ -90,7 +90,6 @@
     "\"Keynote\", id: 409183694"
     "\"Numbers\", id: 409203825"
     "\"Pages\", id: 409201541"
-    "\"Save to Pocket\", id: 1477385213"
     "\"Spotica Menu\", id: 570549457"
     "\"Xcode\", id: 497799835"
 -}}
@@ -166,10 +165,7 @@ info "Configuring Python..."
 
 {{ $py_major_versions := list
      "8"
-     "9"
-     "10"
-     "11"
-     "12"
+     "13"
 -}}
 
 {{ range ($py_major_versions) -}}
@@ -188,16 +184,12 @@ pipx upgrade-all
 # install python utilities
 {{ $py_packages := list
      "black"
-     "flake8"
-     "isort"
      "mypy"
-     "nox"
      "parquet-tools"
      "poetry"
      "pre-commit"
-     "pylint"
      "pytest"
-     "tox"
+     "ruff"
 -}}
 
 info "Installing pipx utilities..."
@@ -236,8 +228,6 @@ ln -sfn /opt/homebrew/bin/docker-buildx ~/.docker/cli-plugins/docker-buildx
 {{ $npm_packages := list
     "@commitlint/cli"
     "@commitlint/config-conventional"
-    "commitizen"
-    "cz-conventional-changelog"
     "serverless"
     "serverless-latest-layer-version"
     "serverless-plugin-aws-alerts"
@@ -254,6 +244,13 @@ info "Installing global NodeJS packages..."
 {{ range ($npm_packages) -}}
 npm list -g "{{ . }}" &> /dev/null || npm install -g --loglevel=error "{{ . }}"
 {{ end -}}
+
+#==============================================================================
+# Install C/C++
+#==============================================================================
+
+ln -s (brew --prefix llvm)/bin/clang-tidy ~/.local/bin/clang-tidy
+
 
 #==============================================================================
 # Install LUA
@@ -274,6 +271,3 @@ hererocks ~/Projects/tools/lua/lua5.1 --lua 5.1 --luarocks latest
 
 info "Adding bat themes..."
 bat cache --build
-
-# Add screensaver
-defaults -currentHost write com.apple.screensaver moduleDict -dict moduleName Aerial path "$HOME/Library/Screen Savers/Aerial.saver"
