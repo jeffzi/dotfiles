@@ -1,7 +1,11 @@
-function lt --wraps='exa $EXA_STANDARD_OPTIONS $EXA_LT_OPTIONS' --description 'alias lt exa $EXA_STANDARD_OPTIONS $EXA_LT_OPTIONS'
-    if git rev-parse --is-inside-work-tree &>/dev/null
-        exa $EXA_STANDARD_OPTIONS {$EXA_LT_OPTIONS} --git $argv
+function lt --wraps='exa' --description "Replace tree with eza"
+    set base_args -laTF --icons --group-directories-first --total-size --no-time --no-permissions --no-user
+    set has_L_arg (string match -r -- '-L[0-9]*' $argv)
+
+    if test -z "$has_L_arg"
+        # If no -L argument, add -L1 to the command
+        eza $base_args -L1 $argv
     else
-        exa $EXA_STANDARD_OPTIONS {$EXA_LT_OPTIONS} $argv
+        eza $base_args $argv
     end
 end
