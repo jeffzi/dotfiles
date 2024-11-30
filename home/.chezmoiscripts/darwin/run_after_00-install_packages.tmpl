@@ -6,11 +6,6 @@
 # Install packages
 #==============================================================================
 
-{{ $taps := list
-     "homebrew/cask-drivers"
-     "homebrew/cask-fonts"
--}}
-
 {{ $brews := list
      "awscli"
      "bash"
@@ -33,9 +28,9 @@
      "node"
      "openjdk"
      "ripgrep"
+     "rsync"
      "starship"
      "stylua"
-     "time-out"
      "tldr"
      "wget"
 -}}
@@ -45,7 +40,6 @@
      "1password"
      "airfoil"
      "aldente"
-     "altserver"
      "amethyst"
      "appcleaner"
      "bartender"
@@ -71,6 +65,7 @@
      "kap"
      "keepingyouawake"
      "keka"
+     "logi-options+"
      "mullvad-browser"
      "protonvpn"
      "raycast"
@@ -79,6 +74,7 @@
      "spaceid"
      "spotify"
      "tableau"
+     "time-out"
      "visual-studio-code"
      "vlc"
      "whatsapp"
@@ -87,8 +83,6 @@
 {{ $mas := list
     "\"1Password for Safari\", id: 1569813296"
     "\"Infuse\", id: 1136220934"
-    "\"iStat Menus\", id: 1319778037"
-    "\"Keepa\", id: 1533805339"
     "\"Keynote\", id: 409183694"
     "\"Numbers\", id: 409203825"
     "\"Pages\", id: 409201541"
@@ -113,10 +107,6 @@ info "Installing brew packages..."
 brew install --quiet mas
 export HOMEBREW_CASK_OPTS="--no-quarantine --force --overwrite"
 brew bundle --no-lock --file=/dev/stdin <<EOF
-
-{{ range ($taps | sortAlpha | uniq) -}}
-tap "{{ . }}"
-{{ end -}}
 
 {{ range ($brews | sortAlpha | uniq) -}}
 brew "{{ . }}"
@@ -248,14 +238,7 @@ npm list -g "{{ . }}" &> /dev/null || npm install -g --loglevel=error "{{ . }}"
 {{ end -}}
 
 #==============================================================================
-# Install C/C++
-#==============================================================================
-
-ln -s (brew --prefix llvm)/bin/clang-tidy ~/.local/bin/clang-tidy
-
-
-#==============================================================================
-# Install LUA
+# Install Lua
 #==============================================================================
 
 info "Installing Lua & LuaJIT..."
