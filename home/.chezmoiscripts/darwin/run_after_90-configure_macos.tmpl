@@ -13,11 +13,11 @@ osascript -e 'tell application "System Preferences" to quit'
 # Hostname
 #==============================================================================
 
-info "Setting computer name to '{{ chezmoi.hostname }}'"
-sudo scutil --set ComputerName "{{ chezmoi.hostname }}"
-sudo scutil --set HostName "{{ chezmoi.hostname }}"
-sudo scutil --set LocalHostName "{{ chezmoi.hostname }}"
-sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "{{ chezmoi.hostname }}"
+info "Setting computer name to '{{ .hostname }}'"
+sudo scutil --set ComputerName "{{ .hostname }}"
+sudo scutil --set HostName "{{ .hostname }}"
+sudo scutil --set LocalHostName "{{ .hostname }}"
+sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "{{ .hostname }}"
 dscacheutil -flushcache
 
 #==============================================================================
@@ -164,7 +164,7 @@ defaults write com.apple.SoftwareUpdate AutomaticDownload -bool true
 # Install System data files & security updates
 defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -bool true
 
-# Disable automatica download apps purchased on other Macs
+# Disable automatic download apps purchased on other Macs
 defaults write com.apple.SoftwareUpdate ConfigDataInstall -bool false
 
 # Turn on app auto-update
