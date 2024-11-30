@@ -246,9 +246,9 @@ info "Installing Lua & LuaJIT..."
 pipx install git+https://github.com/luarocks/hererocks
 
 export MACOSX_DEPLOYMENT_TARGET=15.1
-hererocks ~/Projects/tools/lua/luajit --luajit @v2.1 --luarocks latest
-hererocks ~/Projects/tools/lua/lua5.4 --lua 5.4 --luarocks latest
-hererocks ~/Projects/tools/lua/lua5.1 --lua 5.1 --luarocks latest
+{{ .chezmoi.homeDir }}/.local/bin/hererocks ~/Projects/tools/lua/luajit --luajit @v2.1 --luarocks latest
+{{ .chezmoi.homeDir }}/.local/bin/hererocks ~/Projects/tools/lua/lua5.4 --lua 5.4 --luarocks latest
+{{ .chezmoi.homeDir }}/.local/bin/hererocks ~/Projects/tools/lua/lua5.1 --lua 5.1 --luarocks latest
 
 #==============================================================================
 # Misc
