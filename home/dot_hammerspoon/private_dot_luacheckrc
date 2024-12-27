@@ -1,0 +1,15 @@
+std = "max"
+max_comment_line_length = 100
+
+include_files = {
+  "**/*.lua",
+  "**/*.rockspec",
+  ".busted",
+  ".luacheckrc",
+}
+
+exclude_files = { "dist/*.lua" }
+
+files["spec/*.lua"] = {
+  std = "+busted",
+}

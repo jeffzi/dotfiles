@@ -1,3 +1,5 @@
+hs.loadSpoon("EmmyLua")
+
 local inspect = hs.inspect.inspect
 
 local function notification(title, is_error)
@@ -28,7 +30,7 @@ hs.screen.watcher.new(set_screen_resolution):start()
 -- Switch on/off external display (shared with Desktop machine)
 -- ------------------------------------------------------------
 
-local desk_log = hs.logger.new("display", "debug")
+local log = hs.logger.new("display", "debug")
 
 -- Fix for currentNetwork returning nil on MacOS Sonoma
 -- This will add Hammerspoon to Settings/Privacy & Security/Location Services where we need to enable it.
@@ -62,22 +64,22 @@ local function is_anker_hub_connected()
 end
 
 local function run_shortcut(shortcut)
-   desk_log.i(string.format("Running %s shortcut...", shortcut))
+   log.i(string.format("Running %s shortcut...", shortcut))
    local success = os.execute(string.format("shortcuts run '%s'", shortcut))
    if not success then
       local error = string.format("Failed to run `shortcuts %s'`", shortcut)
-      desk_log.e(error)
+      log.e(error)
       notification(error, true)
       return false
    else
-      desk_log.i("done.")
+      log.i("done.")
       notification(shortcut)
       return true
    end
 end
 
 local function desk_on()
-   desk_log.i("Running desk_on function...")
+   log.i("Running desk_on function...")
    if not is_home() then
       notification("Not home, don't switch on the plug.")
       return
@@ -90,14 +92,14 @@ end
 local ping = hs.network.ping.ping
 
 local function desk_off()
-   desk_log.i("Running desk_off function...")
+   log.i("Running desk_off function...")
    if not is_home() then
       notification("Not home, don't switch off the plug.")
       return
    end
    -- Switch off display only when Desktop is not awake.
    local is_success = false
-   local function ping_callback(self, message, ...)
+   local function ping_callback(self, message)
       if message == "receivedPacket" then
          is_success = true
          self:cancel() -- exit early if one ping succeeds
@@ -106,7 +108,7 @@ local function desk_off()
       end
    end
 
-   desk_log.i("pinging desktop...")
+   log.i("pinging desktop...")
    ping(desktop_address, 1, 1.0, 1.0, "any", ping_callback)
 end
 
@@ -137,10 +139,14 @@ hs.usb.watcher.new(hub_callback):start()
 usb_log.i("Attached USB devices:\n" .. inspect(hs.usb.attachedDevices()))
 
 local caffeinate_watcher = hs.caffeinate.watcher
-local on_events =
-   { [caffeinate_watcher.systemDidWake] = true, [caffeinate_watcher.screensDidUnlock] = true }
-local off_events =
-   { [caffeinate_watcher.systemWillSleep] = true, [caffeinate_watcher.systemWillPowerOff] = true }
+local on_events = {
+   [caffeinate_watcher.systemDidWake] = true,
+   [caffeinate_watcher.screensDidUnlock] = true,
+}
+local off_events = {
+   [caffeinate_watcher.systemWillSleep] = true,
+   [caffeinate_watcher.systemWillPowerOff] = true,
+}
 local caffeinate_log = hs.logger.new("caffeinate", "debug")
 
 local function system_state_callback(event)
