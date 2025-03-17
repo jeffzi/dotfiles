@@ -85,4 +85,3 @@ function M.residentSize() end
 -- Notes:
 --  * Outside of a context of a Lua pcall() (or a C lua_pcall()), this will cause Hammerspoon to exit. We follow the safe behaviour of terminating the app on any unhandled Objective C exception.
 function M.throwObjCException(name, message, ...) end
-

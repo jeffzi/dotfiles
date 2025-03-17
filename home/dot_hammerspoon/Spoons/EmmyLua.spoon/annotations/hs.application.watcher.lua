@@ -62,4 +62,3 @@ M.terminated = nil
 
 -- An application has been unhidden
 M.unhidden = nil
-

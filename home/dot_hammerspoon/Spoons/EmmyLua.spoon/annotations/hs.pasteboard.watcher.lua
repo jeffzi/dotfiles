@@ -68,4 +68,3 @@ function M:start() end
 -- Returns:
 --  * The `hs.pasteboard.watcher` object
 function M:stop() end
-

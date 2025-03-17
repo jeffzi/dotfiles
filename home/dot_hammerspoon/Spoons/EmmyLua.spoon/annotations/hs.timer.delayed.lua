@@ -73,4 +73,3 @@ function M:start(delay, ...) end
 --  * the delayed timer object
 ---@return hs.timer.delayed
 function M:stop() end
-

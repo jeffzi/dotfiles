@@ -140,4 +140,3 @@ function M.registerCallback(fn, ...) end
 --  * true if the callback was successfully unregistered or false if it was not, usually because the uuidString does not correspond to a current callback function.
 ---@return boolean
 function M.unregisterCallback(uuidString, ...) end
-

@@ -151,4 +151,3 @@ function M.stop() end
 -- Notes:
 --  * Changes made with this function are saved with `hs.settings` with the label "_documentationServer.trackBrowserFrameChanges" and will persist through a reload or restart of Hammerspoon.
 function M.trackBrowserFrame(value, ...) end
-

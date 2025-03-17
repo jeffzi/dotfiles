@@ -2,7 +2,7 @@
 ---@diagnostic disable: unused-local
 
 -- A module for capturing and manipulating image objects from other modules for use with hs.drawing.
--- 
+--
 ---@class hs.image
 local M = {}
 hs.image = M
@@ -300,4 +300,3 @@ function M:template(state, ...) end
 --  * A string.
 ---@return string
 function M:toASCII(width, height, ...) end
-

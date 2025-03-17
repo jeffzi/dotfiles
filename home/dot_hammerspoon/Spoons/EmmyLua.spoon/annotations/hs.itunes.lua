@@ -206,4 +206,3 @@ function M.volumeDown() end
 -- Returns:
 --  * None
 function M.volumeUp() end
-

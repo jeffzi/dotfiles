@@ -752,4 +752,3 @@ M.windowUnminimized = nil
 -- Event for `hs.window.filter:subscribe()`: a window became "visible" (in *any* Mission Control Space, as per `hs.window:isVisible()`)
 -- after having been hidden or minimized, or if it was just created
 M.windowVisible = nil
-

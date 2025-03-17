@@ -60,4 +60,3 @@ function M:start() end
 --  * The `hs.screen.watcher` object
 ---@return hs.screen.watcher
 function M:stop() end
-

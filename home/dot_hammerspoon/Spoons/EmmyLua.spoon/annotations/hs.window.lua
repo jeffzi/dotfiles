@@ -883,4 +883,3 @@ function M:windowsToWest(candidateWindows, frontmost, strict, ...) end
 --  * The co-ordinates in the rect-table (i.e. the `x` and `y` values) are in absolute co-ordinates, not relative to the window the button is part of, or the screen the window is on
 --  * Although not perfect as such, this method can provide a useful way to find a region of the titlebar suitable for simulating mouse click events on, with `hs.eventtap`
 function M:zoomButtonRect() end
-

@@ -352,4 +352,3 @@ function M:subTextColor(color, ...) end
 --  * This should be used before a chooser has been displayed
 ---@return hs.chooser
 function M:width(percent, ...) end
-

@@ -462,4 +462,3 @@ function M:synthesize(value, ...) end
 -- Returns:
 --  * A table containing the names of any virtual MIDI sources as strings.
 function M.virtualSources() end
-

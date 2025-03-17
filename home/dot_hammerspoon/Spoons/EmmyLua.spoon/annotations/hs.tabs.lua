@@ -39,4 +39,3 @@ function M.focusTab(app, num, ...) end
 -- Notes:
 --  * This function can be used when writing tab switchers
 function M.tabWindows(app, ...) end
-

@@ -290,4 +290,3 @@ function M.registerEntity(entity, codepoint, ...) end
 --    * relative URLs are not possible to express properly so baseURL will always be nil and relativePath and relativeString will always match path and absoluteString.
 --    * These limitations may change in a future update if the need for a more fully compliant URL treatment is determined to be necessary.
 function M.urlParts(url, ...) end
-

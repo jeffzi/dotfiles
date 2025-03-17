@@ -229,4 +229,3 @@ function M:start() end
 -- Returns:
 --  * The event tap object
 function M:stop() end
-

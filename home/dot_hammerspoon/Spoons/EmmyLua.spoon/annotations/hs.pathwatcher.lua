@@ -67,4 +67,3 @@ function M:start() end
 -- Returns:
 --  * None
 function M:stop() end
-

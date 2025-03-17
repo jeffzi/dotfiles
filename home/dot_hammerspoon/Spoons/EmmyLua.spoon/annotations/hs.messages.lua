@@ -27,4 +27,3 @@ function M.iMessage(targetAddress, message, ...) end
 -- Returns:
 --  * None
 function M.SMS(targetNumber, message, ...) end
-

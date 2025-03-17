@@ -323,4 +323,3 @@ function M:voice(full_or_voice, ...) end
 -- Notes:
 --  * Volume units lie on a scale that is linear with amplitude or voltage. A doubling of perceived loudness corresponds to a doubling of the volume.
 function M:volume(volume, ...) end
-

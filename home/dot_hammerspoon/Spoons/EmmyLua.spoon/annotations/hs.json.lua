@@ -4,7 +4,7 @@
 -- JSON encoding and decoding
 --
 -- This module is based partially on code from the previous incarnation of Mjolnir by [Steven Degutis](https://github.com/sdegutis/).
--- 
+--
 ---@class hs.json
 local M = {}
 hs.json = M
@@ -56,4 +56,3 @@ function M.read(path, ...) end
 --  * `true` if successful otherwise `false` if an error has occurred
 ---@return boolean
 function M.write(data, path, prettyprint, replace, ...) end
-

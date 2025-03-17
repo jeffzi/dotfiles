@@ -27,4 +27,3 @@ function M:name() end
 --  * The `hs.audiodevice.datasource` object
 ---@return hs.audiodevice.datasource
 function M:setDefault() end
-

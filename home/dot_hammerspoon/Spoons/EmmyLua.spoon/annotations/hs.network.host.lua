@@ -91,4 +91,3 @@ function M.reachabilityForAddress(address, fn, ...) end
 --  * The numeric representation is made up from a combination of the flags defined in `hs.network.reachability.flags`.
 --  * Performs the same reachability test as `hs.network.reachability.forHostName`.
 function M.reachabilityForHostname(name, fn, ...) end
-

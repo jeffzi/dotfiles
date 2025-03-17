@@ -295,4 +295,3 @@ function M.sortByKeyValues(table, fn, ...) end
 --  * Optional parameters `nMax` and `bPlain` are identified by their type -- if parameter 3 or 4 is a number or nil, it will be considered a value for `nMax`; if parameter 3 or 4 is a boolean value, it will be considered a value for `bPlain`.
 --  * Lua patterns are more flexible for pattern matching, but can also be slower if the split point is simple. See §6.4.1 of the _Lua_Reference_Manual_ at http://www.lua.org/manual/5.3/manual.html#6.4.1 for more information on Lua patterns.
 function M.split(sString, sSeparator, nMax, bPlain, ...) end
-

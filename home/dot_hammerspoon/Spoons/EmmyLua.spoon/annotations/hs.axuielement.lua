@@ -521,4 +521,3 @@ M.units = {}
 -- Notes:
 --  * if `windowObject` is a string or number, only the first item found with `hs.window.find` will be used by this function to create an axuielementObject.
 function M.windowElement(windowObject, ...) end
-

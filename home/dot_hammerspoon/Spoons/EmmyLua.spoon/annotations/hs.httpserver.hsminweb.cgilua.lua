@@ -284,4 +284,3 @@ function M.tmpname() end
 -- Notes:
 --  * CGILua supports being invoked through a URL that amounts to set of chained paths and script names; this is not necessary for this module, so these variables may differ somewhat from a true CGILua installation; the intent of the variable has been maintained as closely as I can determine at present.  If this changes, so will this documentation.
 M.urlpath = nil
-

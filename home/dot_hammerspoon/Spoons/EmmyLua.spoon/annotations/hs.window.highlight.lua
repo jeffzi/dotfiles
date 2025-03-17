@@ -86,4 +86,3 @@ function M.toggleIsolate(v) end
 --  * `hs.window.highlight.ui.windowShownFlashColorInvert = {1,0,1,0.8}`
 --  * `hs.window.highlight.ui.windowHiddenFlashColorInvert = {0,1,1,0.8}`
 M.ui = nil
-

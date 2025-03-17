@@ -115,4 +115,3 @@ function M.previousWindow() end
 --  * `hs.window.switcher.ui.selectedThumbnailSize = 384`
 --  * `hs.window.switcher.ui.showSelectedTitle = true` - show larger title for the currently selected window
 M.ui = nil
-

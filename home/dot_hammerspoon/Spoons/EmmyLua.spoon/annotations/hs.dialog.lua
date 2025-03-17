@@ -124,4 +124,3 @@ function M.textPrompt(message, informativeText, defaultText, buttonOne, buttonTw
 --      hs.dialog.webviewAlert(testWebviewB, testCallbackFn, "Message", "Informative Text", "Single Button")```
 ---@return string
 function M.webviewAlert(webview, callbackFn, message, informativeText, buttonOne, buttonTwo, style, ...) end
-

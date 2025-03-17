@@ -104,4 +104,3 @@ function M.scriptPath(n) end
 -- Returns:
 --  * `true` if the spoon was loaded, `nil` otherwise
 function M.use(name, arg, noerror, ...) end
-

@@ -267,4 +267,3 @@ function M:stateImageSize(size, ...) end
 -- Returns:
 --  * the menubar item title, or an empty string, if there isn't one.  If `styled` is not set or is false, then a string is returned; otherwise a styledtextObject will be returned.
 function M:title(styled, ...) end
-

@@ -360,4 +360,3 @@ function M.unlock(filehandle, start, length, ...) end
 -- Returns:
 --  * A string or `nil` if path is invalid.
 function M.urlFromPath(path, ...) end
-

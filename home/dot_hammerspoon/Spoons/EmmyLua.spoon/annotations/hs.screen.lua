@@ -520,4 +520,3 @@ function M:toUnitRect(rect, ...) end
 --   * An `hs.screen` object, or `nil` if not found
 ---@return hs.screen
 function M:toWest(from, strict, ...) end
-
