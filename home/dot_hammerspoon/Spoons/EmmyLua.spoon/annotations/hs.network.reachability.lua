@@ -182,4 +182,3 @@ function M:statusString() end
 -- Returns:
 --  * the reachability object
 function M:stop() end
-

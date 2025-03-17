@@ -316,4 +316,3 @@ function M.waitWhile(predicateFn, actionFn, checkInterval, ...) end
 -- Returns:
 --  * The number of seconds in n weeks
 function M.weeks(n) end
-

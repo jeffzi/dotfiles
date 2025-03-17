@@ -124,4 +124,3 @@ function M.lists() end
 -- Notes:
 --  * This is not a constant, so you can adjust the colors at run time for your installation if desired.
 M.x11 = nil
-

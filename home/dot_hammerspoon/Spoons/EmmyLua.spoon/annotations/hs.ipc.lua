@@ -189,4 +189,3 @@ function M.remotePort(name, ...) end
 --  * status   - a boolean indicating whether or not the local port responded before the timeout (true) or if an error or timeout occurred waiting for the response (false)
 --  * response - the response from the local port, usually a string, but may be nil if there was no response returned.  If status is false, will contain an error message describing the error.
 function M:sendMessage(data, msgID, waitTimeout, oneWay, ...) end
-

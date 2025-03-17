@@ -2,7 +2,7 @@
 ---@diagnostic disable: unused-local
 
 -- Execute Open Scripting Architecture (OSA) code - AppleScript and JavaScript
--- 
+--
 ---@class hs.osascript
 local M = {}
 hs.osascript = M
@@ -76,4 +76,3 @@ function M.javascript(source, ...) end
 --  * This function uses hs.osascript.javascript for execution.
 --  * Use hs.osascript._osascript(source, "JavaScript") if you always want the result as a string, even when a failure occurs. However, this function can only take a string, and not a file name.
 function M.javascriptFromFile(fileName, ...) end
-

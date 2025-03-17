@@ -10,4 +10,3 @@
 ---@class hs.sqlite3
 local M = {}
 hs.sqlite3 = M
-

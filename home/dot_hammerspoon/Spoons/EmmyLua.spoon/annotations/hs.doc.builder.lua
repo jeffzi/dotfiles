@@ -50,4 +50,3 @@ function M.genJSON(source, ...) end
 --  * string - the relevant SQL commands as a string
 ---@return string
 function M.genSQL(source, ...) end
-

@@ -68,4 +68,3 @@ function M:send(message, isData, ...) end
 --   * unknown
 ---@return string
 function M:status() end
-

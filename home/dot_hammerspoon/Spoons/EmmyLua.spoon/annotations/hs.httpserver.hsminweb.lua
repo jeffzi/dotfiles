@@ -383,4 +383,3 @@ function M:stop() end
 --    * Some extraneous or duplicate keys have been removed.
 --    * This function is patterned after RFC 3986 while `hs.http.urlParts` uses OS X API functions which are patterned after RFC 1808. RFC 3986 obsoletes 1808.  The primary distinction that affects this module is in regards to `parameters` for path components in the URI -- RFC 3986 disallows them in schema based URI's (like the URL's that are used for web based traffic).
 function M.urlParts(url, ...) end
-

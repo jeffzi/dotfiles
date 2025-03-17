@@ -18,4 +18,3 @@ hs.usb = M
 --   * vendorID - A number containing the Vendor ID of the device
 --   * productID - A number containing the Product ID of the device
 function M.attachedDevices() end
-

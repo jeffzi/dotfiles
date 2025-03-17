@@ -58,4 +58,3 @@ function M:start() end
 -- Returns:
 --  * The `hs.distributednotifications` object
 function M:stop() end
-

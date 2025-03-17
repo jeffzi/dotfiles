@@ -229,4 +229,3 @@ function M:start() end
 --  * the `hs.window.layout` object
 ---@return hs.window.layout
 function M:stop() end
-

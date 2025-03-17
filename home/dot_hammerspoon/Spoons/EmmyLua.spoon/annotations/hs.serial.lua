@@ -259,4 +259,3 @@ function M:usesDTRDSRFlowControl(value, ...) end
 -- Notes:
 --  * The default value is `false`.
 function M:usesRTSCTSFlowControl(value, ...) end
-

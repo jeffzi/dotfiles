@@ -223,4 +223,3 @@ function M:start() end
 -- Returns:
 --  * the echoRequestObject
 function M:stop() end
-

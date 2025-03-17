@@ -350,4 +350,3 @@ function M.writeObjects(object, name, ...) end
 --  * Property lists consist only of certain types of data: tables, strings, numbers, dates, binary data, and Boolean values.
 ---@return boolean
 function M.writePListForUTI(name, uti, data, add, ...) end
-

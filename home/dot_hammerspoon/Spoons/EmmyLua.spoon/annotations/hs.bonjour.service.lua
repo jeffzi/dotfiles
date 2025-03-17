@@ -252,4 +252,3 @@ function M:txtRecord(records, ...) end
 --  * a string containing the type of service represented by the serviceObject.
 ---@return string
 function M:type() end
-

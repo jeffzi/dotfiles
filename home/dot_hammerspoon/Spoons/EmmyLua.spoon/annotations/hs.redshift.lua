@@ -139,4 +139,3 @@ function M.toggle(v) end
 -- Notes:
 --  * This function should be bound to a hotkey, e.g.: `hs.hotkey.bind('ctrl-cmd','=','Invert',hs.redshift.toggleInvert)`
 function M.toggleInvert(v) end
-

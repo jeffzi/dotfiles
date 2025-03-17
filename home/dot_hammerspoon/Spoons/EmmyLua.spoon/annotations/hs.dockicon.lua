@@ -89,4 +89,3 @@ function M.tileUpdate() end
 --  * A boolean, true if the dock icon is visible, false if not
 ---@return boolean
 function M.visible() end
-

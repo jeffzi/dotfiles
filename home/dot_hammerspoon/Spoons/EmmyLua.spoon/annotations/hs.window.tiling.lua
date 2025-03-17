@@ -33,4 +33,3 @@ hs.window.tiling = M
 --   * Hidden and minimized windows will be processed as well: the rect will have "gaps" where the invisible windows
 --     would lie, that will get filled as the windows get unhidden/unminimized
 function M.tileWindows(windows, rect, desiredAspect, processInOrder, preserveRelativeArea, animationDuration, ...) end
-

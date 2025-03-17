@@ -88,4 +88,3 @@ function M:stop() end
 
 -- A volume is about to be unmounted
 M.willUnmount = nil
-

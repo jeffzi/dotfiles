@@ -37,4 +37,3 @@ hs.doc.markdown = M
 --   * HARD_WRAP     - line breaks are replaced with <br> entities
 --   * SPACE_HEADERS - require a space between the `#` and the name of a header (prevents collisions with the Issues filter)
 function M.convert(markdown, type, ...) end
-

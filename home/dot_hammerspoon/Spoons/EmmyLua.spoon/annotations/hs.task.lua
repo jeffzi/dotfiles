@@ -258,4 +258,3 @@ function M:waitUntilExit() end
 -- Notes:
 --  * This only returns the directory that the task starts in.  If the task changes the directory itself, this value will not reflect that change.
 function M:workingDirectory() end
-

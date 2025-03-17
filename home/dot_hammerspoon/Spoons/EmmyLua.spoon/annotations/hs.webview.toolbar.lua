@@ -436,4 +436,3 @@ function M:visible(bool, ...) end
 -- Returns:
 --  * a table as an array of the currently visible toolbar item identifiers.  Toolbar items which are in the overflow menu are *not* included in this array.  See also [hs.webview.toolbar:items](#items) and [hs.webview.toolbar:allowedItems](#allowedItems).
 function M:visibleItems() end
-

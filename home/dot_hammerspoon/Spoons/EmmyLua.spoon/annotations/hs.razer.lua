@@ -280,4 +280,3 @@ function M:orangeStatusLight(value, ...) end
 --    of the usual GitHub tests. It can also be used for
 --    user troubleshooting.
 function M.unitTests() end
-

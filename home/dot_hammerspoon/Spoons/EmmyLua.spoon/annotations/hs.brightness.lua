@@ -45,4 +45,3 @@ function M.get() end
 --  * True if the brightness was set, false if not
 ---@return boolean
 function M.set(brightness, ...) end
-

@@ -340,4 +340,3 @@ function M.windowsForSpace(spaceID, ...) end
 --  * For most windows, this will be a single element table; however some applications may create "sticky" windows that may appear on more than one space.
 --    * For example, the container windows for `hs.canvas` objects which have the `canJoinAllSpaces` behavior set will appear on all spaces and the table returned by this function will contain all spaceIDs for the screen which displays the canvas.
 function M.windowSpaces(window, ...) end
-

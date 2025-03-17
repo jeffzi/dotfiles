@@ -128,4 +128,3 @@ function M:zoneOn(zone, ...) end
 --  * True if the command was sent correctly, otherwise false
 ---@return boolean
 function M:zoneWhite(zone, ...) end
-

@@ -118,4 +118,3 @@ function M:shear(xFactor, yFactor, ...) end
 -- Returns:
 --  * the new matrix
 function M:translate(x, y, ...) end
-
