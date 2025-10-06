@@ -118,4 +118,3 @@ function M.registerJSONFile(jsonfile, isSpoon, ...) end
 -- Notes:
 --  * This function requires the rebuilding of the entire documentation tree for all remaining registered files, so the next time help is queried with [hs.doc.help](#help), there may be a slight one-time delay.
 function M.unregisterJSONFile(jsonfile, ...) end
-

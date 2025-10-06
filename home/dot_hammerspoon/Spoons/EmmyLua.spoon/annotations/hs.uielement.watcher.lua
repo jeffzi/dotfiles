@@ -77,4 +77,3 @@ function M:start(events, ...) end
 --  * This is automatically called if the element is destroyed.
 ---@return hs.uielement.watcher
 function M:stop() end
-

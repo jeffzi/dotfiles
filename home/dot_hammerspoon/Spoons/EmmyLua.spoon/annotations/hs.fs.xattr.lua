@@ -16,7 +16,7 @@
 --
 --  * "noSecurity"      - bypass authorization checking
 --  * "noDefault"       - bypass the default extended attribute file (dot-underscore file)
--- 
+--
 ---@class hs.fs.xattr
 local M = {}
 hs.fs.xattr = M
@@ -87,4 +87,3 @@ function M.remove(path, attribute, options, ...) end
 --  * True if the operation succeeds; otherwise throws a Lua error with a description of reason for failure.
 ---@return boolean
 function M.set(path, attribute, value, options, position, ...) end
-

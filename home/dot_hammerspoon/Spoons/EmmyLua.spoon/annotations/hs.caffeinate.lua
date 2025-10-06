@@ -148,4 +148,3 @@ function M.systemSleep() end
 -- Notes:
 --  * If systemIdle is toggled to on, it will apply to AC only
 function M.toggle(sleepType, ...) end
-

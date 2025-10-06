@@ -521,4 +521,3 @@ function M:watcherStart() end
 --  * The `hs.audiodevice` object
 ---@return hs.audiodevice
 function M:watcherStop() end
-

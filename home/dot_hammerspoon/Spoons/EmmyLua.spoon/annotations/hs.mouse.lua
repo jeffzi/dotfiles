@@ -157,4 +157,3 @@ function M.setRelativePosition(point, screen, ...) end
 --  * Note that changes to this value will not be noticed immediately by macOS
 ---@return number
 function M.trackingSpeed(speed, ...) end
-

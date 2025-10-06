@@ -40,4 +40,3 @@ function M:start() end
 --  * The `hs.battery.watcher` object
 ---@return hs.battery.watcher
 function M:stop() end
-

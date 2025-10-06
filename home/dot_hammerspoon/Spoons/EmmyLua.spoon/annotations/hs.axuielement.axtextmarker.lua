@@ -114,4 +114,3 @@ function M.newRange(startMarker, endMarker, ...) end
 -- Returns:
 --  *  the starting marker for an axTextMarkerRangeObject
 function M:startMarker() end
-

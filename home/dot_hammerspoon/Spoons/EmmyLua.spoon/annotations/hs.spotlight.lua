@@ -319,4 +319,3 @@ function M:valueListAttributes(attributes, ...) end
 -- Notes:
 --  * Value list summaries are a quick way to gather statistics about the number of results which match certain criteria - they do not allow you easy access to the matching members, just information about their numbers.
 function M:valueLists() end
-

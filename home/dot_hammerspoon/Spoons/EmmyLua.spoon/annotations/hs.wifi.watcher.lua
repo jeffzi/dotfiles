@@ -102,4 +102,3 @@ function M:stop() end
 --  * the possible values for this method are described in [hs.wifi.watcher.eventTypes](#eventTypes).
 --  * the special string "all" specifies that all event types should be watched for.
 function M:watchingFor(messages, ...) end
-

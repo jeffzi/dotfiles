@@ -135,4 +135,3 @@ function M:removeRecordsFor(displayNames, dataTypes, callback, ...) end
 --    * `WKWebsiteDataTypeIndexedDBDatabases`         - WebSQL databases.
 --    * `WKWebsiteDataTypeWebSQLDatabases`            - IndexedDB databases.
 function M.websiteDataTypes() end
-

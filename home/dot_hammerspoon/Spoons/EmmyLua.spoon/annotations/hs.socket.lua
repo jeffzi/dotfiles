@@ -57,7 +57,7 @@
 --             LuaSkin: (secondary thread): TCP socket disconnected Socket closed by remote peer
 -- ```
 --
--- 
+--
 ---@class hs.socket
 local M = {}
 hs.socket = M
@@ -75,7 +75,7 @@ hs.socket = M
 --
 -- Notes:
 --  * Either a host/port pair OR a Unix domain socket path must be supplied. If no port is passed, the first parameter is assumed to be a path to the socket file.
--- 
+--
 function M:connect(host, port_or_path, fn, ...) end
 
 -- Returns the connection status of the socket.
@@ -88,7 +88,7 @@ function M:connect(host, port_or_path, fn, ...) end
 --
 -- Notes:
 --  * If the socket is bound for listening, this method returns `true` if there is at least one connection.
--- 
+--
 ---@return boolean
 function M:connected() end
 
@@ -102,7 +102,7 @@ function M:connected() end
 --
 -- Notes:
 --  * This method returns at most 1 for default (non-listening) sockets.
--- 
+--
 ---@return number
 function M:connections() end
 
@@ -116,7 +116,7 @@ function M:connections() end
 --
 -- Notes:
 --  * If called on a listening socket with multiple connections, each client is disconnected.
--- 
+--
 ---@return hs.socket
 function M:disconnect() end
 
@@ -146,7 +146,7 @@ function M:disconnect() end
 --    * timeout - `number`
 --    * unixSocketPath - `string`
 --    * userData - `string`
--- 
+--
 function M:info() end
 
 -- Binds an unconnected socket to either a port or path (Unix domain socket) for listening.
@@ -157,7 +157,7 @@ function M:info() end
 --
 -- Returns:
 --  * The [`hs.socket`](#new) object, or `nil` if an error occurred.
--- 
+--
 function M:listen(port_or_path, ...) end
 
 -- Creates an unconnected asynchronous TCP socket object.
@@ -167,7 +167,7 @@ function M:listen(port_or_path, ...) end
 --
 -- Returns:
 --  * An [`hs.socket`](#new) object.
--- 
+--
 ---@return hs.socket
 function M.new(fn) end
 
@@ -197,7 +197,7 @@ function M.new(fn) end
 -- AF_ROUTE | 17 | Internal Routing Protocol
 -- AF_LINK | 18 | Link layer interface
 -- AF_INET6 | 30 | IPv6
--- 
+--
 function M.parseAddress(sockaddr, ...) end
 
 -- Read data from the socket.
@@ -212,16 +212,16 @@ function M.parseAddress(sockaddr, ...) end
 -- Notes:
 --  * Results are passed to the socket's [callback function](#setCallback), which must be set to use this method.
 --  * If called on a listening socket with multiple connections, data is read from each of them.
--- 
+--
 function M:read(delimiter, tag, ...) end
 
 -- Alias for [`hs.socket:read`](#read)
--- 
+--
 ---@return hs.socket
 function M:receive(delimiter, tag, ...) end
 
 -- Alias for [`hs.socket:write`](#write)
--- 
+--
 ---@return hs.socket
 function M:send(message, tag, ...) end
 
@@ -234,7 +234,7 @@ function M:send(message, tag, ...) end
 --
 -- Returns:
 --  * An [`hs.socket`](#new) object.
--- 
+--
 ---@return hs.socket
 function M.server(port_or_path, fn, ...) end
 
@@ -250,7 +250,7 @@ function M.server(port_or_path, fn, ...) end
 --
 -- Notes:
 --  * A callback must be set in order to read data from the socket.
--- 
+--
 ---@return hs.socket
 function M:setCallback(fn) end
 
@@ -264,7 +264,7 @@ function M:setCallback(fn) end
 --
 -- Notes:
 --  *  If the timeout value is negative, the operations will not use a timeout, which is the default.
--- 
+--
 ---@return hs.socket
 function M:setTimeout(timeout, ...) end
 
@@ -280,7 +280,7 @@ function M:setTimeout(timeout, ...) end
 -- Notes:
 --  * The socket will disconnect immediately if TLS negotiation fails.
 --  * **IMPORTANT SECURITY NOTE**: The default settings will check to make sure the remote party's certificate is signed by a trusted 3rd party certificate agency (e.g. verisign) and that the certificate is not expired.  However it will not verify the name on the certificate unless you give it a name to verify against via `peerName`.  The security implications of this are important to understand.  Imagine you are attempting to create a secure connection to MySecureServer.com, but your socket gets directed to MaliciousServer.com because of a hacked DNS server.  If you simply use the default settings, and MaliciousServer.com has a valid certificate, the default settings will not detect any problems since the certificate is valid.  To properly secure your connection in this particular scenario you should set `peerName` to "MySecureServer.com".
--- 
+--
 ---@return hs.socket
 function M:startTLS(verify, peerName, ...) end
 
@@ -290,7 +290,7 @@ function M:startTLS(verify, peerName, ...) end
 --  * New [`hs.socket`](#new) objects will be created with this timeout value, but can individually change it with the [`hs.socket:setTimeout`](#setTimeout) method.
 --
 --  * If the timeout value is negative, the operations will not use a timeout. The default value is `-1`.
--- 
+--
 M.timeout = nil
 
 -- Write data to the socket.
@@ -305,7 +305,6 @@ M.timeout = nil
 --
 -- Notes:
 --  * If called on a listening socket with multiple connections, data is broadcast to all connected sockets.
--- 
+--
 ---@return hs.socket
 function M:write(message, tag, fn, ...) end
-

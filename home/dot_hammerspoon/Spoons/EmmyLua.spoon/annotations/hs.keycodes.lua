@@ -129,4 +129,3 @@ function M.setLayout(layoutName, ...) end
 --  * A boolean, true if the method was successfully changed, otherwise false
 ---@return boolean
 function M.setMethod(methodName, ...) end
-

@@ -509,4 +509,3 @@ function M.updateAvailable() end
 --  * Our Privacy Policy can be found here: [https://www.hammerspoon.org/privacy.html](https://www.hammerspoon.org/privacy.html)
 ---@return boolean
 function M.uploadCrashData(state, ...) end
-

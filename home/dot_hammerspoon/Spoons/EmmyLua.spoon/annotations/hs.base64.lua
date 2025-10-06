@@ -26,4 +26,3 @@ function M.decode(str, ...) end
 -- Returns:
 --  * A string containing the base64 representation of the input string
 function M.encode(val, width, ...) end
-

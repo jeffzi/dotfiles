@@ -37,4 +37,3 @@ function M.capslock.set(state, ...) end
 --  * true if on, false if off
 ---@return boolean
 function M.capslock.toggle() end
-

@@ -123,4 +123,3 @@ function M.show() end
 --      `hs.dialog.color.showsAlpha(true)`
 ---@return boolean
 function M.showsAlpha(value, ...) end
-

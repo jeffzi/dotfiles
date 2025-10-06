@@ -7,4 +7,3 @@
 ---@class hs.javascript
 local M = {}
 hs.javascript = M
-

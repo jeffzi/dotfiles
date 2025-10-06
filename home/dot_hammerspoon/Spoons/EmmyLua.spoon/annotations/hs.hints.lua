@@ -47,4 +47,3 @@ M.titleMaxSize = nil
 --  * To display hints only for the currently focused application, try something like:
 --   * `hs.hints.windowHints(hs.window.focusedWindow():application():allWindows())`
 function M.windowHints(windows, callback, allowNonStandard, ...) end
-

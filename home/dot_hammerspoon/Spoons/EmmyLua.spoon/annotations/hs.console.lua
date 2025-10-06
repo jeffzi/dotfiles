@@ -324,4 +324,3 @@ function M.toolbar(toolbar, ...) end
 -- Notes:
 --  * See the `hs.drawing.color` entry in the Dash documentation, or type `help.hs.drawing.color` in the Hammerspoon console to get more information on how to specify a color.
 function M.windowBackgroundColor(color, ...) end
-

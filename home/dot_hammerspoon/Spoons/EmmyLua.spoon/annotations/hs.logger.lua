@@ -214,4 +214,3 @@ function M.w(...) end
 -- Returns:
 --  * None
 function M.wf(fmt, ...) end
-

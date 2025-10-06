@@ -38,4 +38,3 @@ function M:attributes() end
 --
 --  * For convenience, metamethods have been added to the spotlightItemObject which allow you to use `spotlightItemObject.attribute` as a shortcut for `spotlightItemObject:valueForAttribute(attribute)`.
 function M:valueForAttribute(attribute, ...) end
-

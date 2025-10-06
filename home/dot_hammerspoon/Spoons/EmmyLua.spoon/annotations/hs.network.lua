@@ -75,4 +75,3 @@ function M.interfaces() end
 -- Notes:
 --  * The IPv4 and IPv6 interface names are often, but not always, the same.
 function M.primaryInterfaces() end
-

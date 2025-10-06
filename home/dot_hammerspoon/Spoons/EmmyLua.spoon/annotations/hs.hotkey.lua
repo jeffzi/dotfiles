@@ -240,4 +240,3 @@ function M.showHotkeys(mods, key, ...) end
 -- Notes:
 --  * this is provided for informational purposes and does not provide a reliable test as to whether or not Hammerspoon can use the combination to create a custom hotkey -- some combinations which return a table can be over-ridden by Hammerspoon while others cannot.  See also [hs.hotkey.assignable](#assignable).
 function M.systemAssigned(mods, key, ...) end
-

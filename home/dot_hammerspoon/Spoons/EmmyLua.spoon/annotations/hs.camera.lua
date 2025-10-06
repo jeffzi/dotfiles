@@ -146,4 +146,3 @@ function M.stopWatcher() end
 --  * The UID is not guaranteed to be stable across reboots
 ---@return string
 function M:uid() end
-

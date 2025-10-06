@@ -76,4 +76,3 @@ function M:setCallback(fn) end
 -- Notes:
 --  * Because the WKUserContentController class only allows for removing all scripts, you can use this method to generate a list of all scripts, modify it, and then use it in a loop to reapply the scripts if you need to remove just a few scripts.
 function M:userScripts() end
-

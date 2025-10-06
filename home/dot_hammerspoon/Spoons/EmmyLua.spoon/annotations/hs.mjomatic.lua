@@ -31,4 +31,3 @@ hs.mjomatic = M
 -- "S Sublime Text 2"})
 -- ~~~
 function M.go(cfg, ...) end
-

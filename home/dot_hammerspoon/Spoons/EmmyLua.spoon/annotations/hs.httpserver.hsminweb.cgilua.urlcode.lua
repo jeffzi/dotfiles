@@ -70,4 +70,3 @@ function M.parsequery(query, table, ...) end
 --  * a string with all "+" characters converted to spaces and all percent encoded sequences converted to their ascii equivalents.
 ---@return string
 function M.unescape(string, ...) end
-

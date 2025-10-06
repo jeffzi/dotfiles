@@ -152,4 +152,3 @@ function M:toggleShow(activeApplication, ...) end
 --  * `hs.expose.ui.fitWindowsMaxIterations = 30` -- lower is faster, but higher chance of overlapping thumbnails
 --  * `hs.expose.ui.fitWindowsInBackground = false` -- improves responsiveness, but can affect the rest of the config
 M.ui = nil
-

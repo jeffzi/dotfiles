@@ -40,4 +40,3 @@ function M:start() end
 --  * The `hs.usb.watcher` object
 ---@return hs.usb.watcher
 function M:stop() end
-

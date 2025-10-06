@@ -114,4 +114,3 @@ function M:exited() end
 --  * If `key` is nil, no global hotkey will be registered (all other parameters will be ignored)
 ---@return hs.hotkey.modal
 function M.new(mods, key, message, ...) end
-

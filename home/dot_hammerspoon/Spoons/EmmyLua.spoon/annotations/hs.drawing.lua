@@ -764,4 +764,3 @@ M.windowBehaviors = {}
 --
 --  * A drawing object with a [hs.drawing:setClickCallback](#setClickCallback) function can only reliably receive mouse click events when its window level is at `hs.drawing.windowLevels.desktopIcon` + 1 or higher.
 M.windowLevels = nil
-

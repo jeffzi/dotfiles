@@ -184,4 +184,3 @@ function M:stop() end
 --   * ws://localhost:8000/mysock
 --   * wss://localhost:8000/mysock (if SSL enabled)
 function M:websocket(path, callback, ...) end
-

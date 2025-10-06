@@ -203,4 +203,3 @@ function M:setCallback(fn) end
 --  * The number of packets received will match the number that has currently been sent, not necessarily the value returned by [hs.network.ping:count](#count).
 ---@return string
 function M:summary() end
-

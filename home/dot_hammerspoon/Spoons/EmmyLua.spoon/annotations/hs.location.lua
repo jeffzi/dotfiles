@@ -301,4 +301,3 @@ function M.sunset(latitude, longitude, offset, date, ...) end
 -- Returns:
 --  * None
 function M.unregister(tag, ...) end
-

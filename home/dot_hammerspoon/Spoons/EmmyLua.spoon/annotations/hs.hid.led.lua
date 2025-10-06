@@ -19,4 +19,3 @@ hs.hid.led = M
 --  * This function controls the LED state only, to modify capslock state, use hs.hid.capslock.set
 ---@return boolean
 function M.set(name, state, ...) end
-

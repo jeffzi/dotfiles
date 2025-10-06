@@ -117,4 +117,3 @@ function M:stop() end
 -- Returns:
 --  * If no parameter is provided, returns the current value; otherwise returns the recognizer object.
 function M:title(title, ...) end
-
