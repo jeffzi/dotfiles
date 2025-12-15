@@ -7,10 +7,7 @@
 #==============================================================================
 
 info "Restoring configs via Mackup..."
-brew install --quiet mackup
-# Must uninstall because of bug with MacOS 14
-# https://github.com/lra/mackup/issues/1924#issuecomment-1756330534
-mackup restore --force && mackup uninstall --force
+mackup restore --force
 
 #==============================================================================
 # iTerm2
