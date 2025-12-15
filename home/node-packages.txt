@@ -1,0 +1,6 @@
+@commitlint/cli
+@commitlint/config-conventional
+serverless@3.38.0
+serverless-latest-layer-version
+serverless-plugin-aws-alerts
+serverless-python-requirements

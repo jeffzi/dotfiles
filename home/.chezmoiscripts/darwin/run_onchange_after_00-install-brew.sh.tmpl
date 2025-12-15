@@ -57,28 +57,6 @@ ln -sfn /opt/homebrew/opt/docker-compose/bin/docker-compose ~/.docker/cli-plugin
 ln -sfn /opt/homebrew/bin/docker-buildx ~/.docker/cli-plugins/docker-buildx
 
 #==============================================================================
-# Install NodeJS packages
-#==============================================================================
-
-{{ $npm_packages := list
-    "@commitlint/cli"
-    "@commitlint/config-conventional"
-    "serverless@3.38.0"
-    "serverless-latest-layer-version"
-    "serverless-plugin-aws-alerts"
-    "serverless-python-requirements"
--}}
-
-info "Updating global NodeJS packages..."
-[ "$(npm outdated)" != "" ] && npm update -g --loglevel=error
-
-info "Installing global NodeJS packages..."
-# Install node package if not already installed
-{{ range ($npm_packages) -}}
-npm list -g "{{ . }}" &> /dev/null || npm install -g --loglevel=error "{{ . }}"
-{{ end -}}
-
-#==============================================================================
 # Install Lua
 #==============================================================================
 

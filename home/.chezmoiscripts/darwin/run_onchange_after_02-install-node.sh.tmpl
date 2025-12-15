@@ -1,0 +1,14 @@
+#!/bin/bash
+# npm packages hash: {{ include "node-packages.txt" | sha256sum }}
+
+{{ template "bash-lib" }}
+
+#==============================================================================
+# Install NodeJS packages
+#==============================================================================
+
+info "Installing global npm packages..."
+while IFS= read -r package || [[ -n "$package" ]]; do
+    [[ -z "$package" || "$package" =~ ^# ]] && continue
+    npm install -g --loglevel=error "$package"
+done < {{ .chezmoi.sourceDir }}/node-packages.txt
