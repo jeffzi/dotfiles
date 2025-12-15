@@ -9,6 +9,10 @@
 info "Restoring configs via Mackup..."
 mackup restore --force
 
+info "Loading Mackup backup LaunchAgent..."
+launchctl unload ~/Library/LaunchAgents/com.user.mackup-backup.plist 2>/dev/null || true
+launchctl load ~/Library/LaunchAgents/com.user.mackup-backup.plist
+
 #==============================================================================
 # iTerm2
 #==============================================================================
