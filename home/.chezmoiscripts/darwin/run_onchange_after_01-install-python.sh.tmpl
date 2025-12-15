@@ -1,0 +1,23 @@
+#!/bin/bash
+# Python tools hash: {{ include "python-tools.txt" | sha256sum }}
+
+{{ template "bash-lib" }}
+
+#==============================================================================
+# Install Python via uv
+#==============================================================================
+
+info "Installing Python 3.8 for legacy projects..."
+uv python install 3.8
+
+info "Installing Python tools..."
+while IFS= read -r package || [[ -n "$package" ]]; do
+    [[ -z "$package" || "$package" =~ ^# ]] && continue
+    uv tool install "$package"
+done < {{ .chezmoi.sourceDir }}/python-tools.txt
+
+info "Configuring poetry..."
+uv tool run poetry config virtualenvs.in-project true
+
+info "Injecting pytest plugins..."
+uv tool inject pytest pytest-clarity pytest-sugar

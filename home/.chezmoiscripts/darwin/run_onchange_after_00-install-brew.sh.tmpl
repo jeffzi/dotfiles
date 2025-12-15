@@ -46,55 +46,6 @@ if ! grep -q $(which fish) /etc/shells; then
 fi
 
 #==============================================================================
-# Configure python
-#==============================================================================
-
-info "Configuring Python..."
-
-# install maintained python versions
- brew install --quiet openssl readline sqlite3 xz pyenv pyenv-virtualenv
-
-{{ $py_major_versions := list
-     "8"
-     "13"
--}}
-
-{{ range ($py_major_versions) -}}
-
-pyenv install --skip-existing 3.{{ . }}
-# delete all versions of this major except for the most recent (sed -e '$ d')
-pyenv versions | grep " 3\.{{ . }}" | sed -e '$ d' | xargs pyenv uninstall -f
-pyenv global 3.{{ . }}
-
-{{ end -}}
-
-# install pipx
-brew install --quiet pipx
-pipx upgrade-all
-
-# install python utilities
-{{ $py_packages := list
-     "black"
-     "mypy"
-     "parquet-tools"
-     "poetry"
-     "pre-commit"
-     "pytest"
-     "ruff"
--}}
-
-info "Installing pipx utilities..."
-# Install pipx package if not already installed
-{{ range ($py_packages) -}}
-(pipx list --short | grep -q "{{ . }}") || pipx install "{{ . }}"
-{{ end -}}
-
-pipx inject pytest pytest-clarity &> /dev/null
-pipx inject pytest pytest-sugar &> /dev/null
-# store python virtual environments in the package s directory
-~/.local/bin/poetry config virtualenvs.in-project true
-
-#==============================================================================
 # Configure docker + colima
 #==============================================================================
 
@@ -133,7 +84,7 @@ npm list -g "{{ . }}" &> /dev/null || npm install -g --loglevel=error "{{ . }}"
 
 info "Installing Lua & LuaJIT..."
 
-pipx install git+https://github.com/luarocks/hererocks
+uv tool install git+https://github.com/luarocks/hererocks
 
 export MACOSX_DEPLOYMENT_TARGET=15.1
 {{ .chezmoi.homeDir }}/.local/bin/hererocks ~/Projects/tools/lua/luajit --luajit @v2.1 --luarocks latest

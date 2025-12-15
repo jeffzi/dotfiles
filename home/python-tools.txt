@@ -1,0 +1,7 @@
+black
+mypy
+parquet-tools
+poetry
+pre-commit
+pytest
+ruff
