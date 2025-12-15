@@ -1,128 +1,24 @@
 #!/bin/bash
+# Brewfile hash: {{ include "Brewfile.tmpl" | sha256sum }}
 
 {{ template "bash-lib" }}
 
 #==============================================================================
-# Install packages
+# Install Homebrew packages
 #==============================================================================
 
-{{ $brews := list
-     "awscli"
-     "bash"
-     "bat"
-     "btop"
-     "clang-format"
-     "eza"
-     "fish"
-     "git-lfs"
-     "git"
-     "go-task"
-     "hyperfine"
-     "jq"
-     "lazygit"
-     "llvm"
-     "lua-language-server"
-     "mackup"
-     "mas"
-     "media-info"
-     "node"
-     "openjdk"
-     "ripgrep"
-     "rsync"
-     "starship"
-     "stylua"
-     "tldr"
-     "wget"
--}}
-
-{{ $casks := list
-     "1password-cli"
-     "1password"
-     "airfoil"
-     "aldente"
-     "amethyst"
-     "appcleaner"
-     "bartender"
-     "betterdisplay"
-     "brave-browser"
-     "cameracontroller"
-     "cyberduck"
-     "datagrip"
-     "defold"
-     "discord"
-     "doll"
-     "eurkey"
-     "font-fira-code-nerd-font"
-     "font-hack-nerd-font"
-     "font-jetbrains-mono-nerd-font"
-     "google-chrome"
-     "hammerspoon"
-     "iina"
-     "imageoptim"
-     "insomnia"
-     "iterm2"
-     "jdownloader"
-     "kap"
-     "karabiner-elements"
-     "keepingyouawake"
-     "keka"
-     "logi-options+"
-     "macs-fan-control"
-     "mullvad-browser"
-     "proton-mail-bridge"
-     "protonvpn"
-     "raycast"
-     "shottr"
-     "slack"
-     "spaceid"
-     "spotify"
-     "tableau"
-     "time-out"
-     "visual-studio-code"
-     "vlc"
-     "whatsapp"
--}}
-
-{{ $mas := list
-    "\"1Password for Safari\", id: 1569813296"
-    "\"Infuse\", id: 1136220934"
-    "\"Keynote\", id: 409183694"
-    "\"Numbers\", id: 409203825"
-    "\"Pages\", id: 409201541"
-    "\"Spotica Menu\", id: 570549457"
-    "\"Xcode\", id: 497799835"
--}}
-
-
-if [ ! "$(command -v brew)" ];
-then
-     info "Installing homebrew..."
-     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-else
-     info "Updating brew packages..."
-     brew update
-     brew autoremove
-     brew cleanup
-     brew upgrade
+if ! command -v brew &> /dev/null; then
+    info "Installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-info "Installing brew packages..."
-brew install --quiet mas
+info "Installing Homebrew packages..."
 export HOMEBREW_CASK_OPTS="--no-quarantine --force --overwrite"
-brew bundle --no-lock --file=/dev/stdin <<EOF
+brew bundle --file={{ .chezmoi.sourceDir }}/Brewfile --no-lock
 
-{{ range ($brews | sortAlpha | uniq) -}}
-brew "{{ . }}"
-{{ end -}}
-
-{{ range ($casks | sortAlpha | uniq) -}}
-cask "{{ . }}"
-{{ end -}}
-
-{{ range ($mas | sortAlpha | uniq) -}}
-mas {{ . }}
-{{ end -}}
-EOF
+info "Cleaning up..."
+brew autoremove
+brew cleanup
 
 #==============================================================================
 # Accept Xcode license
@@ -199,18 +95,11 @@ pipx inject pytest pytest-sugar &> /dev/null
 ~/.local/bin/poetry config virtualenvs.in-project true
 
 #==============================================================================
-# Install docker + colima
+# Configure docker + colima
 #==============================================================================
 
 info "Configuring docker + colima..."
 
-brew install --quiet \
-  colima \
-  docker \
-  docker-buildx \
-  docker-compose \
-  docker-credential-helper \
-  docker-credential-helper-ecr
 # Compose is now a Docker plugin. For Docker to find this plugin, symlink it
 mkdir -p ~/.docker/cli-plugins
 ln -sfn /opt/homebrew/opt/docker-compose/bin/docker-compose ~/.docker/cli-plugins/docker-compose
@@ -228,8 +117,6 @@ ln -sfn /opt/homebrew/bin/docker-buildx ~/.docker/cli-plugins/docker-buildx
     "serverless-plugin-aws-alerts"
     "serverless-python-requirements"
 -}}
-
-brew install --quiet npm
 
 info "Updating global NodeJS packages..."
 [ "$(npm outdated)" != "" ] && npm update -g --loglevel=error
