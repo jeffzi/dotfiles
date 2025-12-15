@@ -102,4 +102,3 @@ function M.lookupAddressNear(address, regionTable, fn, ...) end
 --  * This constructor requires internet access and the callback will be invoked with an error message if the internet is not currently accessible.
 --  * This constructor does not require Location Services to be enabled for Hammerspoon.
 function M.lookupLocation(locationTable, fn, ...) end
-

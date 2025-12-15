@@ -59,4 +59,3 @@ function M.windowFromWindowTitle(title, ...) end
 -- Notes:
 --  * For more about Lua patterns, see http://lua-users.org/wiki/PatternsTutorial and http://www.lua.org/manual/5.2/manual.html#6.4.1
 function M.windowFromWindowTitlePattern(pattern, ...) end
-

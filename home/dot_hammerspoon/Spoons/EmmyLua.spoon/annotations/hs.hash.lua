@@ -297,4 +297,3 @@ M.types = nil
 -- Returns:
 --  * a string containing the hash value or nil if the hash has not been finished.
 function M:value(binary, ...) end
-

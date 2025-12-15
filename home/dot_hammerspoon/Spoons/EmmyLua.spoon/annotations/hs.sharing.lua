@@ -245,4 +245,3 @@ function M:title() end
 --    * filePath      = a string specifying the actual path to the file in case the url is a file reference URL.  Note that setting this field with this method will be silently ignored; the field is automatically inserted if appropriate when returning an NSURL object to lua.
 --    * __luaSkinType - a string specifying the macOS type this table represents when converted into an Objective-C type
 function M.URL(URL, fileURL, ...) end
-

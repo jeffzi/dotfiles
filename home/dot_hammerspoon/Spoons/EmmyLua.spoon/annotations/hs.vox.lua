@@ -204,4 +204,3 @@ function M.togglePlaylist() end
 -- Returns:
 --  * None
 function M.trackInfo() end
-

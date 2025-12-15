@@ -7,4 +7,3 @@
 ---@class hs.applescript
 local M = {}
 hs.applescript = M
-

@@ -56,4 +56,3 @@ function M:start() end
 --  * The `hs.noises` object
 ---@return hs.noises
 function M:stop() end
-

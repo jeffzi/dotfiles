@@ -65,4 +65,3 @@ function M:subgroups() end
 -- Returns:
 --  * the attribute value as an appropriate data type
 function M:value() end
-

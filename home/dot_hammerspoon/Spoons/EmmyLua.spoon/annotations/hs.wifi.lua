@@ -181,4 +181,3 @@ function M:isDone() end
 --  * True if the power change was successful, or false and an error string if an error occurred attempting to set the power state.  Returns nil if there is a problem attaching to the interface.
 ---@return boolean
 function M.setPower(state, interface, ...) end
-

@@ -580,4 +580,3 @@ function M:unhide() end
 -- Returns:
 --  * A table containing zero or more hs.window objects
 function M:visibleWindows() end
-

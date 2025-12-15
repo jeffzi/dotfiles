@@ -70,4 +70,3 @@ function M:role() end
 -- Notes:
 --  * Many applications (e.g. Safari, Mail, Firefox) do not implement the necessary accessibility features for this to work in their web views
 function M:selectedText() end
-

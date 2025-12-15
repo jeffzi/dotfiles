@@ -12,7 +12,7 @@
 --     * This can be mitigated to an extent for web requests by using `hs.webview:reload(true)` and by crafting the url for `hs.webview:url({...})` as a table -- see the appropriate help entries for more information.
 --
 -- Any suggestions or updates to the code to address any of these or other limitations as they may become apparent are welcome at the Hammerspoon github site: https://www.github.com/Hammerspoon/hammerspoon
--- 
+--
 ---@class hs.webview
 local M = {}
 hs.webview = M
@@ -901,4 +901,3 @@ function M:windowStyle(mask, ...) end
 -- Notes:
 --  * The title will be hidden unless the window style includes the "titled" style (see `hs.webview.windowStyle` and `hs.webview.windowMasks`)
 function M:windowTitle(title, ...) end
-

@@ -24,4 +24,3 @@
 ---@class spoon.EmmyLua
 local M = {}
 spoon.EmmyLua = M
-

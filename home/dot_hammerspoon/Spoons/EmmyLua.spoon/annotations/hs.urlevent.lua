@@ -122,4 +122,3 @@ function M.setDefaultHandler(scheme, bundleID, ...) end
 -- Notes:
 --  * You don't have to call this function if you want Hammerspoon to permanently be your default handler. Only use this if you want the handler to be automatically reverted to something else when Hammerspoon exits/reloads.
 function M.setRestoreHandler(scheme, bundleID, ...) end
-

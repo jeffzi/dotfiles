@@ -127,7 +127,7 @@ function M.hide() end
 --     {'X' , 'f14', 'f18', 'f2' , 'f6', 'f8', ';' , '/' , '.' , 'Z'  , 'X'  , 'C'  , 'V'  , 'B'  , 'N'  , 'M'  }
 -- }
 -- ```
--- 
+--
 M.HINTS = nil
 
 -- Moves and resizes a window to fill the entire grid
@@ -340,4 +340,3 @@ function M.toggleShow(exitedCallback, multipleWindows, ...) end
 -- The following variables must be booleans:
 --  * `hs.grid.ui.showExtraKeys = true` -- show non-grid keybindings in the center of the grid
 M.ui = nil
-

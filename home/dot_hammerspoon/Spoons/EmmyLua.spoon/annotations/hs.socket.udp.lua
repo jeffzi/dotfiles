@@ -84,7 +84,7 @@
 -- hello!
 -- from host: 192.168.0.3 port: 53057
 -- ```
--- 
+--
 ---@class hs.socket.udp
 local M = {}
 hs.socket.udp = M
@@ -102,7 +102,7 @@ hs.socket.udp = M
 --  * In order to send broadcast messages, you need to enable this functionality in the socket.
 --  * A broadcast is a UDP message to addresses like "192.168.255.255" or "255.255.255.255" that is delivered to every host on the network.
 --  * The reason this is generally disabled by default (by the OS) is to prevent accidental broadcast messages from flooding the network.
--- 
+--
 function M:broadcast(flag, ...) end
 
 -- Immediately closes the socket, freeing it for reuse. Any pending send operations are discarded.
@@ -112,7 +112,7 @@ function M:broadcast(flag, ...) end
 --
 -- Returns:
 --  * The [`hs.socket.udp`](#new) object.
--- 
+--
 ---@return hs.socket.udp
 function M:close() end
 
@@ -128,7 +128,7 @@ function M:close() end
 --  * UDP sockets are typically meant to be connectionless.
 --  * Sending a packet anywhere, regardless of whether or not the destination receives it, opens the socket until it is explicitly closed.
 --  * An active listening socket will not be closed, but will not be 'connected' unless the [`hs.socket.udp:connect`](#connect) method has been called.
--- 
+--
 ---@return boolean
 function M:closed() end
 
@@ -151,7 +151,7 @@ function M:closed() end
 -- * The actual process of connecting a UDP socket does not result in any communication on the socket, it simply changes the internal state of the socket.
 -- * You cannot bind a socket for listening after it has been connected.
 -- * You can only connect a socket once.
--- 
+--
 function M:connect(host, port, fn, ...) end
 
 -- Returns the connection status of the socket.
@@ -165,7 +165,7 @@ function M:connect(host, port, fn, ...) end
 -- Notes:
 --  * UDP sockets are typically meant to be connectionless.
 --  * This method will only return `true` if the [`hs.socket.udp:connect`](#connect) method has been explicitly called.
--- 
+--
 ---@return boolean
 function M:connected() end
 
@@ -182,7 +182,7 @@ function M:connected() end
 --  * Must be called before binding the socket. If you want to create an IPv6-only server, do something like:
 --    * `hs.socket.udp.new(callback):enableIPv(4, false):listen(port):receive()`
 --  * The convenience constructor [`hs.socket.server`](#server) will automatically bind the socket and requires closing and relistening to use this method.
--- 
+--
 function M:enableIPv(version, flag, ...) end
 
 -- Returns information about the socket.
@@ -217,7 +217,7 @@ function M:enableIPv(version, flag, ...) end
 --    * maxReceiveIPv6BufferSize - `number`
 --    * timeout - `number`
 --    * userData - `string`
--- 
+--
 function M:info() end
 
 -- Binds an unconnected socket to a port for listening.
@@ -227,7 +227,7 @@ function M:info() end
 --
 -- Returns:
 --  * The [`hs.socket.udp`](#new) object, or `nil` if an error occurred.
--- 
+--
 function M:listen(port, ...) end
 
 -- Creates an unconnected asynchronous UDP socket object.
@@ -237,12 +237,12 @@ function M:listen(port, ...) end
 --
 -- Returns:
 --  * An [`hs.socket.udp`](#new) object.
--- 
+--
 ---@return hs.socket.udp
 function M.new(fn) end
 
 -- Alias for [`hs.socket.parseAddress`](./hs.socket.html#parseAddress)
--- 
+--
 function M.parseAddress(sockaddr, ...) end
 
 -- Suspends reading of packets from the socket.
@@ -255,7 +255,7 @@ function M.parseAddress(sockaddr, ...) end
 --
 -- Notes:
 --  * Call one of the receive methods to resume.
--- 
+--
 ---@return hs.socket.udp
 function M:pause() end
 
@@ -271,17 +271,17 @@ function M:pause() end
 --  * If a DNS lookup returns only IPv4 results, the socket will automatically use IPv4.
 --  * If a DNS lookup returns only IPv6 results, the socket will automatically use IPv6.
 --  * If a DNS lookup returns both IPv4 and IPv6 results, then the protocol used depends on the configured preference.
--- 
+--
 ---@return hs.socket.udp
 function M:preferIPv(version, ...) end
 
 -- Alias for [`hs.socket.udp:receive`](#receive)
--- 
+--
 ---@return hs.socket.udp
 function M:read(delimiter, tag, ...) end
 
 -- Alias for [`hs.socket.udp:receiveOne`](#receiveOne)
--- 
+--
 ---@return hs.socket.udp
 function M:readOne(delimiter, tag, ...) end
 
@@ -302,7 +302,7 @@ function M:readOne(delimiter, tag, ...) end
 --  * Receiving packets continuously is better suited to real-time streaming applications.
 --  * You may switch back and forth between one-at-a-time mode and continuous mode.
 --  * If the socket is currently in one-at-a-time mode, calling this method will switch it to continuous mode.
--- 
+--
 function M:receive(fn) end
 
 -- Reads a single packet from the socket.
@@ -322,7 +322,7 @@ function M:receive(fn) end
 --  * Receiving packets continuously is better suited to real-time streaming applications.
 --  * You may switch back and forth between one-at-a-time mode and continuous mode.
 --  * If the socket is currently in continuous mode, calling this method will switch it to one-at-a-time mode
--- 
+--
 function M:receiveOne(fn) end
 
 -- Enables port reuse on the socket.
@@ -338,7 +338,7 @@ function M:receiveOne(fn) end
 --  * To enable multiple processes to simultaneously bind to the same address & port, you need to enable this functionality in the socket.
 --  * All processes that wish to use the address & port simultaneously must all enable reuse port on the socket bound to that port.
 --  * Must be called before binding the socket.
--- 
+--
 function M:reusePort(flag, ...) end
 
 -- Sends a packet to the destination address.
@@ -358,7 +358,7 @@ function M:reusePort(flag, ...) end
 --  * If the socket has been explicitly connected with [`connect`](#connect), only the message parameter and an optional tag and/or write callback can be supplied.
 --  * Recall that connecting is optional for a UDP socket.
 --  * For connected sockets, data can only be sent to the connected address.
--- 
+--
 ---@return hs.socket.udp
 function M:send(message, host, port, tag, fn, ...) end
 
@@ -370,7 +370,7 @@ function M:send(message, host, port, tag, fn, ...) end
 --
 -- Returns:
 --  * An [`hs.socket.udp`](#new) object.
--- 
+--
 ---@return hs.socket.udp
 function M.server(port, fn, ...) end
 
@@ -390,7 +390,7 @@ function M.server(port, fn, ...) end
 --  * Since the OS notifies us of the size of each received UDP packet, the actual allocated buffer size for each packet is exact.
 --  * In practice the size of UDP packets is generally much smaller than the max. Most protocols will send and receive packets of only a few bytes, or will set a limit on the size of packets to prevent fragmentation in the IP layer.
 --  * If you set the buffer size too small, the sockets API in the OS will silently discard any extra data.
--- 
+--
 ---@return hs.socket.udp
 function M:setBufferSize(size, version, ...) end
 
@@ -406,7 +406,7 @@ function M:setBufferSize(size, version, ...) end
 --
 -- Notes:
 --  * A callback must be set in order to read data from the socket.
--- 
+--
 ---@return hs.socket.udp
 function M:setCallback(fn) end
 
@@ -420,7 +420,7 @@ function M:setCallback(fn) end
 --
 -- Notes:
 --  *  If the timeout value is negative, the operations will not use a timeout, which is the default.
--- 
+--
 ---@return hs.socket.udp
 function M:setTimeout(timeout, ...) end
 
@@ -430,11 +430,10 @@ function M:setTimeout(timeout, ...) end
 --  * New [`hs.socket.udp`](#new) objects will be created with this timeout value, but can individually change it with the [`hs.socket.udp:setTimeout`](#setTimeout) method.
 --
 --  * If the timeout value is negative, the operations will not use a timeout. The default value is `-1`.
--- 
+--
 M.timeout = nil
 
 -- Alias for [`hs.socket.udp:send`](#send)
--- 
+--
 ---@return hs.socket.udp
 function M:write(message, tag, ...) end
-

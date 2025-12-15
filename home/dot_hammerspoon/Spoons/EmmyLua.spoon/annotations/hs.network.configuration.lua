@@ -100,7 +100,7 @@ function M:location() end
 --
 -- Returns:
 --  * a table of key-value pairs mapping location UUIDs to their names
--- 
+--
 function M:locations() end
 
 -- Specify the key(s) or key pattern(s) to monitor for changes.
@@ -180,4 +180,3 @@ function M:start() end
 -- Returns:
 --  * the store object
 function M:stop() end
-

@@ -13,7 +13,7 @@
 --   * hs.utf8.offset        - help available via `help.lua.utf8.offset`
 --
 -- Additional functions that are specific to Hammerspoon which provide expanded support for UTF8 are documented here.
--- 
+--
 ---@class hs.utf8
 local M = {}
 hs.utf8 = M
@@ -72,7 +72,7 @@ function M.codepointToUTF8(...) end
 --       end
 --
 --    Where replacement is `utf8.char(0xFFFD)`, if you leave it out of the `hs.utf8.fixUTF8` function in the first line.
--- 
+--
 function M.fixUTF8(inString, replacementChar, ...) end
 
 -- Returns a hex dump of the provided string.  This is primarily useful for examining the exact makeup of binary data contained in a Lua String as individual bytes for debugging purposes.
@@ -178,4 +178,3 @@ M.registeredKeys = {}
 --  * For parity with `hs.utf8.registeredKeys`, this can also be invoked as if it were an array: i.e. `hs.utf8.registeredLabels(char)` is equivalent to `hs.utf8.registeredLabels[char]`
 ---@return string
 function M.registeredLabels(utf8char, ...) end
-

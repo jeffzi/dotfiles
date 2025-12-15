@@ -88,4 +88,3 @@ function M.show(str, style, screen, seconds, ...) end
 --  * The reason for this logic is to support the creation of persistent alerts as was previously handled by the module: If you specify a non-number value for `seconds` you will need to store the string identifier returned by this function so that you can close it manually with `hs.alert.closeSpecific` when the alert should be removed.
 --  * Any style element which is not specified in the `style` argument table will use the value currently defined in the [hs.alert.defaultStyle](#defaultStyle) table.
 function M.showWithImage(str, image, style, screen, seconds, ...) end
-

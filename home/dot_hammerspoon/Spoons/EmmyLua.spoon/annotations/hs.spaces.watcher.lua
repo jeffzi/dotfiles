@@ -34,4 +34,3 @@ function M:start() end
 -- Returns:
 --  * The watcher object
 function M:stop() end
-

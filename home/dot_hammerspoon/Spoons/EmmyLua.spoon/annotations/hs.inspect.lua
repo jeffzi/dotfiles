@@ -29,4 +29,3 @@ hs.inspect = M
 --  * For more information on the options, and some examples, see [the upstream docs](https://github.com/kikito/inspect.lua)
 ---@return string
 function M.inspect(variable, options, ...) end
-

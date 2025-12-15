@@ -54,4 +54,3 @@ function M.write(filepath, data, binary, ...) end
 -- Returns:
 --  * A string representing the data as a plist or nil if there was a problem with the date or serialization.
 function M.writeString(data, binary, ...) end
-

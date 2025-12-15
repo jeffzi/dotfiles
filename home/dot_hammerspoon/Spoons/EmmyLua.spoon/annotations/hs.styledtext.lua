@@ -605,4 +605,3 @@ function M:upper() end
 --  * `true` if valid, otherwise `false`.
 ---@return boolean
 function M.validFont(font, ...) end
-

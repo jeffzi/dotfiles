@@ -326,4 +326,3 @@ function M.warningLevel() end
 --   * Greater than zero if the battery is being charged
 ---@return number
 function M.watts() end
-

@@ -191,4 +191,3 @@ function M:setButtonImage(button, image, ...) end
 -- Returns:
 --  * The hs.streamdeck object
 function M:setScreenImage(encoder, image, ...) end
-

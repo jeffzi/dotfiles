@@ -400,4 +400,3 @@ function M.setLogLevel(loglevel, ...) end
 
 -- Definitions for IPC Commands from Hammerspoon to the HUB.
 M.toHub = nil
-

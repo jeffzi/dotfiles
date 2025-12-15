@@ -54,4 +54,3 @@ function M.start() end
 --  * The `hs.audiodevice.watcher` object
 ---@return hs.audiodevice.watcher
 function M.stop() end
-

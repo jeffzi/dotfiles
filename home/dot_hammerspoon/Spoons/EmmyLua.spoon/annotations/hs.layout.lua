@@ -85,4 +85,3 @@ M.right70 = nil
 
 -- A unit rect which will make a window occupy the right 75% of a screen
 M.right75 = nil
-
