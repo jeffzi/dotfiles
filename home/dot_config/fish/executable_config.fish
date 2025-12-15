@@ -10,10 +10,13 @@ set -gx EDITOR (which code)
 set -gx PROJECT_PATHS ~/Projects ~/Projects/personal ~/Projects/work/metamoki ~/Projects/work/metamoki/data-engineering/projects ~/Projects/work/metamoki/data-engineering/libs
 abbr -a pjo pj open
 
-# pyenv init
-set --erase PYENV_VERSION
-status is-login; and pyenv init --path | source
-status is-interactive; and pyenv init - | source
+# uv-managed Python 3.8 for legacy poetry projects
+if command -q uv
+    set -l py38_path (uv python find 3.8 2>/dev/null | xargs dirname)
+    if test -n "$py38_path"
+        fish_add_path --path $py38_path
+    end
+end
 
 # exa
 set -gx EZA_CONFIG_DIR ~/.config/eza
