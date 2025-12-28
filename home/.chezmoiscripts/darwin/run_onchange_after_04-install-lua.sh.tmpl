@@ -1,0 +1,78 @@
+#!/bin/bash
+set -eu
+
+{{ template "bash-lib" }}
+
+#==============================================================================
+# Install Lua & LuaJIT via hererocks
+#==============================================================================
+
+info "Installing Lua & LuaJIT..."
+
+# Install or update hererocks
+if uv tool list | grep -q "^hererocks "; then
+    info "Updating hererocks..."
+    uv tool upgrade hererocks
+else
+    info "Installing hererocks..."
+    uv tool install --force git+https://github.com/luarocks/hererocks
+fi
+
+(
+    export MACOSX_DEPLOYMENT_TARGET=26.2
+
+    info "Installing LuaJIT v2.1..."
+    {{ .chezmoi.homeDir }}/.local/bin/hererocks ~/Projects/tools/lua/luajit --luajit @v2.1 --luarocks latest
+
+    info "Installing Lua 5.4..."
+    {{ .chezmoi.homeDir }}/.local/bin/hererocks ~/Projects/tools/lua/lua5.4 --lua 5.4 --luarocks latest
+
+    info "Installing Lua 5.1..."
+    {{ .chezmoi.homeDir }}/.local/bin/hererocks ~/Projects/tools/lua/lua5.1 --lua 5.1 --luarocks latest
+)
+
+#==============================================================================
+# Install lux - modern Lua package manager
+#==============================================================================
+
+if ! command -v lx &> /dev/null; then
+    info "Installing lux (modern Lua package manager)..."
+
+    # Install binary via cargo (easy to update with cargo-update)
+    cargo install lux-cli --locked
+
+    # Clone repo to generate completions and man pages
+    LUX_TMP_DIR=$(mktemp -d)
+    git clone --depth 1 https://github.com/lumen-oss/lux.git "$LUX_TMP_DIR"
+    cd "$LUX_TMP_DIR"
+
+    # Generate completions and man pages using xtask
+    info "Generating completions and man pages..."
+    cargo xtask dist-completions
+    cargo xtask dist-man
+
+    # Install completions
+    info "Installing shell completions..."
+    mkdir -p {{ .chezmoi.homeDir }}/.local/share/fish/vendor_completions.d
+    cp target/dist/lx.fish {{ .chezmoi.homeDir }}/.local/share/fish/vendor_completions.d/lx.fish
+
+    # Install man pages
+    info "Installing man pages..."
+    mkdir -p {{ .chezmoi.homeDir }}/.local/share/man/man1
+    cp target/dist/*.1 {{ .chezmoi.homeDir }}/.local/share/man/man1/
+
+    # Cleanup
+    cd -
+    rm -rf "$LUX_TMP_DIR"
+
+    success "Lux installed with completions and man pages!"
+else
+    info "Updating lux..."
+    if command -v cargo-install-update &> /dev/null; then
+        cargo install-update lux-cli
+    else
+        cargo install lux-cli --locked --force
+    fi
+fi
+
+success "Lua installation complete!"
