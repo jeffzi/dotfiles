@@ -58,6 +58,20 @@ if ! grep -q $(which fish) /etc/shells 2>/dev/null; then
      chsh -s $(which fish) 2>/dev/null || warning "Failed to change shell to fish (run 'chsh -s $(which fish)' manually)"
 fi
 
+# Install/update fish plugins via fisher
+if command -v fish &> /dev/null; then
+    info "Installing fish plugins..."
+    fish -c "
+        # Install fisher if not present
+        if ! type -q fisher
+            curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source
+            fisher install jorgebucaran/fisher
+        end
+        # Update all plugins from fish_plugins
+        fisher update
+    " || warning "Failed to update fish plugins"
+fi
+
 #==============================================================================
 # Configure docker + colima
 #==============================================================================
