@@ -1,5 +1,7 @@
 #!/bin/bash
-# npm packages hash: {{ include "node-packages.txt" | sha256sum }}
+set -eu
+
+# npm packages hash: {{ include "packages/node-tools.txt" | sha256sum }}
 
 {{ template "bash-lib" }}
 
@@ -11,4 +13,6 @@ info "Installing global npm packages..."
 while IFS= read -r package || [[ -n "$package" ]]; do
     [[ -z "$package" || "$package" =~ ^# ]] && continue
     npm install -g --loglevel=error "$package"
-done < {{ .chezmoi.sourceDir }}/node-packages.txt
+done < {{ .chezmoi.sourceDir }}/packages/node-tools.txt
+
+success "Node toolchain installation complete!"

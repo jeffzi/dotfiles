@@ -1,5 +1,7 @@
 #!/bin/bash
-# Python tools hash: {{ include "python-tools.txt" | sha256sum }}
+set -eu
+
+# Python tools hash: {{ include "packages/python-tools.txt" | sha256sum }}
 
 {{ template "bash-lib" }}
 
@@ -13,11 +15,13 @@ uv python install 3.8
 info "Installing Python tools..."
 while IFS= read -r package || [[ -n "$package" ]]; do
     [[ -z "$package" || "$package" =~ ^# ]] && continue
-    uv tool install "$package"
-done < {{ .chezmoi.sourceDir }}/python-tools.txt
+    uv tool install --force "$package"
+done < {{ .chezmoi.sourceDir }}/packages/python-tools.txt
 
 info "Configuring poetry..."
 uv tool run poetry config virtualenvs.in-project true
 
 info "Injecting pytest plugins..."
-uv tool inject pytest pytest-clarity pytest-sugar
+uv tool install pytest --with pytest-clarity --with pytest-sugar
+
+success "Python toolchain installation complete!"

@@ -1,5 +1,7 @@
 #!/bin/bash
-# Brewfile hash: {{ include "Brewfile.tmpl" | sha256sum }}
+set -eu
+
+# Brewfile hash: {{ include "packages/Brewfile" | sha256sum }}
 
 {{ template "bash-lib" }}
 
@@ -14,7 +16,7 @@ fi
 
 info "Installing Homebrew packages..."
 export HOMEBREW_CASK_OPTS="--no-quarantine --force --overwrite"
-brew bundle --file={{ .chezmoi.homeDir }}/Brewfile
+brew bundle --file={{ .chezmoi.sourceDir }}/packages/Brewfile
 
 info "Cleaning up..."
 brew autoremove
@@ -25,13 +27,23 @@ brew cleanup
 #==============================================================================
 
 if mas list | grep -q Xcode; then
-  sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
-  XCODE_VERSION=$(xcodebuild -version | grep '^Xcode\s' | sed -E 's/^Xcode[[:space:]]+([0-9\.]+)/\1/')
-  ACCEPTED_LICENSE_VERSION=$(defaults read /Library/Preferences/com.apple.dt.Xcode 2> /dev/null | grep IDEXcodeVersionForAgreedToGMLicense | cut -d '"' -f 2)
+  # Only set xcode-select if it's not already pointing to the right path
+  CURRENT_XCODE_PATH=$(xcode-select -p 2>/dev/null || echo "")
+  if [ "$CURRENT_XCODE_PATH" != "/Applications/Xcode.app/Contents/Developer" ]; then
+    info "Setting Xcode developer directory..."
+    sudo xcode-select -s /Applications/Xcode.app/Contents/Developer || warning "Failed to set Xcode path (needs sudo)"
+  fi
 
-  if [ "$XCODE_VERSION" != "$ACCEPTED_LICENSE_VERSION" ]; then
-    xcodebuild -runFirstLaunch
-    sudo xcodebuild -license accept
+  # Check if license needs accepting
+  if command -v xcodebuild &> /dev/null; then
+    XCODE_VERSION=$(xcodebuild -version 2>/dev/null | grep '^Xcode\s' | sed -E 's/^Xcode[[:space:]]+([0-9\.]+)/\1/' || echo "")
+    ACCEPTED_LICENSE_VERSION=$(defaults read /Library/Preferences/com.apple.dt.Xcode 2> /dev/null | grep IDEXcodeVersionForAgreedToGMLicense | cut -d '"' -f 2 || echo "")
+
+    if [ -n "$XCODE_VERSION" ] && [ "$XCODE_VERSION" != "$ACCEPTED_LICENSE_VERSION" ]; then
+      info "Accepting Xcode license..."
+      xcodebuild -runFirstLaunch 2>/dev/null || true
+      sudo xcodebuild -license accept || warning "Failed to accept Xcode license (needs sudo)"
+    fi
   fi
 fi
 
@@ -40,9 +52,10 @@ fi
 #==============================================================================
 
 info "Configuring fish shell..."
-if ! grep -q $(which fish) /etc/shells; then
-     sudo bash -c 'echo $(which fish) >> /etc/shells'
-     chsh -s $(which fish)
+if ! grep -q $(which fish) /etc/shells 2>/dev/null; then
+     info "Adding fish to /etc/shells..."
+     sudo bash -c 'echo $(which fish) >> /etc/shells' || warning "Failed to add fish to /etc/shells (needs sudo)"
+     chsh -s $(which fish) 2>/dev/null || warning "Failed to change shell to fish (run 'chsh -s $(which fish)' manually)"
 fi
 
 #==============================================================================
@@ -62,7 +75,10 @@ ln -sfn /opt/homebrew/bin/docker-buildx ~/.docker/cli-plugins/docker-buildx
 
 info "Installing Lua & LuaJIT..."
 
-uv tool install git+https://github.com/luarocks/hererocks
+# Install hererocks if not already installed
+if ! command -v hererocks &> /dev/null; then
+    uv tool install git+https://github.com/luarocks/hererocks
+fi
 
 export MACOSX_DEPLOYMENT_TARGET=15.1
 {{ .chezmoi.homeDir }}/.local/bin/hererocks ~/Projects/tools/lua/luajit --luajit @v2.1 --luarocks latest
@@ -75,3 +91,5 @@ export MACOSX_DEPLOYMENT_TARGET=15.1
 
 info "Adding bat themes..."
 bat cache --build
+
+success "Homebrew installation complete!"

@@ -1,4 +1,5 @@
 #!/bin/bash
+set -eu
 
 {{ template "bash-lib" }}
 
@@ -51,11 +52,11 @@ osascript -e 'tell application "System Settings" to quit'
 #==============================================================================
 
 info "Setting computer name to '{{ .hostname }}'"
-sudo scutil --set ComputerName "{{ .hostname }}"
-sudo scutil --set HostName "{{ .hostname }}"
-sudo scutil --set LocalHostName "{{ .hostname }}"
-sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "{{ .hostname }}"
-dscacheutil -flushcache
+sudo scutil --set ComputerName "{{ .hostname }}" || warning "Failed to set ComputerName (needs sudo)"
+sudo scutil --set HostName "{{ .hostname }}" || true
+sudo scutil --set LocalHostName "{{ .hostname }}" || true
+sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "{{ .hostname }}" || true
+dscacheutil -flushcache 2>/dev/null || true
 
 #==============================================================================
 # General UI/UX

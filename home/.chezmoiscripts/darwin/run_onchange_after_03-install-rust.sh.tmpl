@@ -1,5 +1,7 @@
 #!/bin/bash
-# Rust tools hash: {{ include "rust-tools.txt" | sha256sum }}
+set -eu
+
+# Rust tools hash: {{ include "packages/rust-tools.txt" | sha256sum }}
 
 {{ template "bash-lib" }}
 
@@ -36,7 +38,7 @@ while IFS= read -r package || [[ -n "$package" ]]; do
     else
         info "  ✓ $package already installed, skipping..."
     fi
-done < {{ .chezmoi.sourceDir }}/rust-tools.txt
+done < {{ .chezmoi.sourceDir }}/packages/rust-tools.txt
 
 #==============================================================================
 # Update installed cargo packages
