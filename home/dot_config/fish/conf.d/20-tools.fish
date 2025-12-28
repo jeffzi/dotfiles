@@ -10,8 +10,8 @@ set -gx MANROFFOPT -c
 set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
 
 # Lua activation (sourced after PATH is set)
-if test -f ~/Projects/tools/lua/luajit/bin/activate.fish
-    source ~/Projects/tools/lua/luajit/bin/activate.fish
+if test -f ~/.local/share/lua/luajit/bin/activate.fish
+    source ~/.local/share/lua/luajit/bin/activate.fish
 end
 
 # Fish configuration
