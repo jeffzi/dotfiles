@@ -20,12 +20,16 @@ success() {
   color "1;32" "$@"
 }
 
+warning() {
+  color "1;33" "⚠️  $*"
+}
+
 manual_action() {
   color "1;33" "$@"
 }
 
 sudo() {
-  # source: https://github.com/felipecrs/dotfiles/blob/master/home/.chezmoitemplates/scripts-library
+  # source: https://github.com/felipecrs/dis totfiles/blob/master/home/.chezmoitemplates/scripts-library
   local exec=false
   echo "sudo "  "$@"
   if [[ "$1" == "exec" ]]; then
