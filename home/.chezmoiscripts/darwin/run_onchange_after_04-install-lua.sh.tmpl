@@ -22,23 +22,25 @@ fi
 LUA_BASE="{{ .chezmoi.homeDir }}/Projects/tools/lua"
 HEREROCKS="{{ .chezmoi.homeDir }}/.local/bin/hererocks"
 
+# Function to install Lua version
+install_lua() {
+    local display_name="$1"
+    local dir_name="$2"
+    local path="$LUA_BASE/$dir_name"
+    shift 2
+
+    if [ ! -d "$path/bin" ]; then
+        info "Installing $display_name..."
+        "$HEREROCKS" "$path" "$@"
+    fi
+}
+
 (
     export MACOSX_DEPLOYMENT_TARGET=26.2
 
-    if [ ! -d "$LUA_BASE/luajit/bin" ]; then
-        info "Installing LuaJIT v2.1..."
-        "$HEREROCKS" "$LUA_BASE/luajit" --luajit @v2.1 --luarocks latest
-    fi
-
-    if [ ! -d "$LUA_BASE/lua5.4/bin" ]; then
-        info "Installing Lua 5.4..."
-        "$HEREROCKS" "$LUA_BASE/lua5.4" --lua 5.4 --luarocks latest
-    fi
-
-    if [ ! -d "$LUA_BASE/lua5.1/bin" ]; then
-        info "Installing Lua 5.1..."
-        "$HEREROCKS" "$LUA_BASE/lua5.1" --lua 5.1 --luarocks latest
-    fi
+    install_lua "LuaJIT v2.1" "luajit" --luajit @v2.1 --luarocks latest
+    install_lua "Lua 5.4" "lua5.4" --lua 5.4 --luarocks latest
+    install_lua "Lua 5.1" "lua5.1" --lua 5.1 --luarocks latest
 )
 
 #==============================================================================
