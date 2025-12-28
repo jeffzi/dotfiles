@@ -1,0 +1,28 @@
+#!/bin/bash
+
+{{ template "bash-lib" }}
+
+#==============================================================================
+# Clone Claude Code Configuration
+#==============================================================================
+
+CLAUDE_DIR="${HOME}/.claude"
+CLAUDE_REPO="https://github.com/jeffzi/.claude"
+
+if [ ! -d "$CLAUDE_DIR" ]; then
+    info "Cloning Claude Code configuration to ~/.claude..."
+    git clone "$CLAUDE_REPO" "$CLAUDE_DIR"
+    success "Claude Code configuration cloned successfully"
+else
+    info "Claude Code configuration already exists at ~/.claude"
+
+    # Check if it's a git repository and pull updates
+    if [ -d "$CLAUDE_DIR/.git" ]; then
+        info "Updating Claude Code configuration..."
+        cd "$CLAUDE_DIR"
+        git pull --rebase --autostash
+        success "Claude Code configuration updated"
+    else
+        warning "~/.claude exists but is not a git repository"
+    fi
+fi
