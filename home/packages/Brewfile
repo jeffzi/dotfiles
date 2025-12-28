@@ -1,3 +1,6 @@
+# Taps
+tap "homebrew/command-not-found"
+
 # CLI tools
 brew "awscli"
 brew "bash"
