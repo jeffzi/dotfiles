@@ -1,0 +1,7 @@
+# Essential development tools
+cargo-watch
+cargo-edit
+cargo-audit
+
+# Auto-update support
+cargo-update
