@@ -14,7 +14,7 @@ fi
 
 info "Installing Homebrew packages..."
 export HOMEBREW_CASK_OPTS="--no-quarantine --force --overwrite"
-brew bundle --file={{ .chezmoi.sourceDir }}/Brewfile --no-lock
+brew bundle --file={{ .chezmoi.homeDir }}/Brewfile
 
 info "Cleaning up..."
 brew autoremove
