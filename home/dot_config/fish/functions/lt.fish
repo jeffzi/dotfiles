@@ -1,4 +1,4 @@
-function lt --wraps='exa' --description "Replace tree with eza"
+function lt --wraps='eza' --description "Replace tree with eza"
     set base_args -laTF --icons --group-directories-first --total-size --no-time --no-permissions --no-user
     set has_L_arg (string match -r -- '-L[0-9]*' $argv)
 
