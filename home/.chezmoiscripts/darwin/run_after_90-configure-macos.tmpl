@@ -5,9 +5,46 @@
 # https://github.com/mathiasbynens/dotfiles/blob/main/.macos
 # https://macos-defaults.com/
 
-# Close any open System Preferences panes, to prevent them from overriding
-# settings we’re about to change
-osascript -e 'tell application "System Preferences" to quit'
+#==============================================================================
+# Helper Functions
+#==============================================================================
+
+# Function to verify a setting was applied
+verify_setting() {
+    local domain=$1
+    local key=$2
+    local expected=$3
+
+    actual=$(defaults read "$domain" "$key" 2>/dev/null || echo "MISSING")
+    if [[ "$actual" != "$expected" ]]; then
+        warning "Setting verification failed: $domain $key (expected: $expected, got: $actual)"
+        return 1
+    fi
+    return 0
+}
+
+# Function to restart affected applications
+restart_affected_apps() {
+    info "Restarting affected applications..."
+
+    # Apps that need restart for settings to take effect
+    local apps=(
+        "cfprefsd"           # Preferences daemon (always restart first)
+        "Dock"
+        "Finder"
+        "SystemUIServer"
+    )
+
+    for app in "${apps[@]}"; do
+        killall "${app}" &>/dev/null && success "Restarted ${app}" || true
+    done
+
+    info "Note: Some settings require logout/restart to take full effect"
+}
+
+# Close any open System Settings panes, to prevent them from overriding
+# settings we're about to change
+osascript -e 'tell application "System Settings" to quit'
 
 #==============================================================================
 # Hostname
@@ -37,6 +74,16 @@ defaults write -g NSAutomaticQuoteSubstitutionEnabled -bool false
 defaults write -g NSAutomaticSpellingCorrectionEnabled -bool false
 defaults write -g NSAutomaticTextCompletionEnabled -bool false
 
+# Full keyboard access - Tab through all controls in dialogs
+defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+
+# Scroll bar click behavior - jump to clicked spot (vs next page)
+defaults write NSGlobalDomain AppleScrollerPagingBehavior -bool true
+
+# Handoff between devices
+defaults write com.apple.coreservices.useractivityd ActivityAdvertisingAllowed -bool true
+defaults write com.apple.coreservices.useractivityd ActivityReceivingAllowed -bool true
+
 #==============================================================================
 # Trackpad, mouse, keyboard, Bluetooth accessories, and input
 #==============================================================================
@@ -47,6 +94,10 @@ defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
 
+# Enable three-finger drag (move windows with three fingers)
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag -bool true
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
+
 # Disable natural scroll direction
 defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
 
@@ -54,13 +105,15 @@ defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
 defaults write -g ApplePressAndHoldEnabled -bool false
 
 # Set language and text formats
-defaults write NSGlobalDomain AppleInterfaceStyle Dark
+# Enable auto dark mode (light during day, dark at night)
+defaults write NSGlobalDomain AppleInterfaceStyleSwitchesAutomatically -bool true
+defaults delete NSGlobalDomain AppleInterfaceStyle 2>/dev/null || true
 defaults write NSGlobalDomain AppleLanguages -array "en-FR"
 defaults write NSGlobalDomain NSLinguisticDataAssetsRequested -array "en_US" "en" "fr_FR" "fr"
 defaults write NSGlobalDomain AppleLocale en_FR
 defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"
 defaults write NSGlobalDomain AppleMetricUnits -bool true
-systemsetup -settimezone "Europe/Paris" > /dev/null
+sudo systemsetup -settimezone "Europe/Paris"
 
 # Show all processes in Activity Monitor
 defaults write com.apple.ActivityMonitor ShowCategory -int 0
@@ -72,14 +125,130 @@ defaults write com.apple.TextEdit RichText -int 0
 defaults write com.apple.TextEdit PlainTextEncoding -int 4
 defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
 
-# Mission: Keep the Spaces arrangement
+# Mission Control settings
+# Keep the Spaces arrangement (don't auto-rearrange)
 defaults write com.apple.dock "mru-spaces" -bool false
+# Group windows by application in Mission Control
+defaults write com.apple.dock expose-group-apps -bool true
+# Displays have separate Spaces
+defaults write com.apple.spaces spans-displays -bool false
+# When switching to app, switch to Space with open windows
+defaults write NSGlobalDomain AppleSpacesSwitchOnActivate -bool true
 
 # Don't offer new disks for Time Machine backup
 defaults write com.apple.TimeMachine "DoNotOfferNewDisksForBackup" -bool true
 
-# "Application Downloaded from Internet" popup will not display
-defaults write com.apple.LaunchServices "LSQuarantine" -bool false
+#==============================================================================
+# Security & Privacy
+#==============================================================================
+
+# Require password immediately after sleep or screen saver
+defaults write com.apple.screensaver askForPassword -int 1
+defaults write com.apple.screensaver askForPasswordDelay -int 0
+
+# Disable remote apple events (attack vector)
+sudo systemsetup -setremoteappleevents off
+
+# Disable wake on network access (prevents network-based wake)
+sudo systemsetup -setwakeonnetworkaccess off
+
+# FileVault status check (informational - don't auto-enable)
+if ! fdesetup isactive &>/dev/null; then
+    info "FileVault is not enabled. Consider enabling via System Settings > Privacy & Security"
+fi
+
+# Firewall check (informational - don't auto-enable as it can break things)
+if ! /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate | grep -q "enabled"; then
+    info "Firewall is not enabled. Consider enabling via System Settings"
+fi
+
+# Enable Secure Keyboard Entry in Terminal
+defaults write com.apple.Terminal SecureKeyboardEntry -bool true
+
+# Prevent Photos from opening automatically when devices connected
+defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
+
+#==============================================================================
+# Developer Tools & Workflow
+#==============================================================================
+
+# Expand save and print panels by default (see full file structure)
+defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
+defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
+defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
+
+# Enable developer mode crash dialogs (more useful crash info for game dev)
+defaults write com.apple.CrashReporter DialogType -string "developer"
+
+# Terminal: Only use UTF-8
+defaults write com.apple.terminal StringEncodings -array 4
+
+# Terminal: Disable line marks for better performance
+defaults write com.apple.Terminal ShowLineMarks -int 0
+
+# Keep quarantine enabled for security
+defaults write com.apple.LaunchServices LSQuarantine -bool true
+
+# Disable disk image verification (speeds up DMG mounting for dev work)
+defaults write com.apple.frameworks.diskimages skip-verify -bool true
+defaults write com.apple.frameworks.diskimages skip-verify-locked -bool true
+defaults write com.apple.frameworks.diskimages skip-verify-remote -bool true
+
+#==============================================================================
+# Creative & Media Workflow
+#==============================================================================
+
+# Screenshots - save to Downloads instead of Desktop (keeps desktop clean)
+defaults write com.apple.screencapture location -string "${HOME}/Downloads"
+# Save screenshots in PNG format (higher quality than JPG)
+defaults write com.apple.screencapture type -string "png"
+# Disable screenshot thumbnail preview (faster workflow)
+defaults write com.apple.screencapture show-thumbnail -bool false
+# Include date in screenshot filenames
+defaults write com.apple.screencapture include-date -bool true
+
+# Disable shadow in screenshots (cleaner for design work)
+defaults write com.apple.screencapture disable-shadow -bool true
+
+# QuickTime: Auto-play videos when opened
+defaults write com.apple.QuickTimePlayerX MGPlayMovieOnOpen -bool true
+
+# Preview: Open images in one window with tabs instead of multiple windows
+defaults write com.apple.Preview AppleWindowTabbingMode -string "always"
+
+# Increase Bluetooth audio quality
+defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int 40
+
+# Disable wallpaper tinting (keeps UI colors consistent for design work)
+defaults write NSGlobalDomain AppleReduceDesktopTinting -bool true
+
+#==============================================================================
+# Productivity & Performance
+#==============================================================================
+
+# Speed up animations (snappier feel, but keep the eye candy)
+defaults write com.apple.dock expose-animation-duration -float 0.15
+
+# Window management - use tabs always
+defaults write NSGlobalDomain AppleWindowTabbingMode -string "always"
+
+# Minimize windows into application icon (cleaner dock)
+defaults write com.apple.dock minimize-to-application -bool true
+
+# Notification banner timing (quick dismiss)
+defaults write com.apple.notificationcenterui bannerTime -int 3
+
+# Hot corners
+# Bottom right corner - screen saver
+defaults write com.apple.dock wvous-br-corner -int 5
+defaults write com.apple.dock wvous-br-modifier -int 0
+# Top right corner - Mission Control
+defaults write com.apple.dock wvous-tr-corner -int 2
+defaults write com.apple.dock wvous-tr-modifier -int 0
+
+# Stage Manager - disable by default (can enable per-workspace)
+defaults write com.apple.WindowManager GloballyEnabled -bool false
 
 #==============================================================================
 # Dock
@@ -172,12 +341,51 @@ defaults write com.apple.commerce AutoUpdate -bool true
 sudo softwareupdate --schedule on
 
 #==============================================================================
-# Energy Saving
+# Energy & Power Management
 #==============================================================================
 
-# Disable machine sleep while charging
+# When plugged in (AC Power) - optimize for performance
+# Disable machine sleep while charging (keep working)
 sudo pmset -c sleep 0
-# Set machine sleep to 10 minutes on battery
+# Display sleep after 15 minutes (save screen, but generous timeout)
+sudo pmset -c displaysleep 15
+# Disable disk sleep when plugged in (better performance)
+sudo pmset -c disksleep 0
+
+# When on battery - conservative to preserve charge
+# Sleep after 10 minutes of inactivity
 sudo pmset -b sleep 10
-# Sleep the display after 5 minutes
-sudo pmset -a displaysleep 5
+# Display sleep after 5 minutes
+sudo pmset -b displaysleep 5
+# Allow disk sleep to save power
+sudo pmset -b disksleep 10
+
+# Universal settings (both AC and battery)
+# Enable Power Nap on AC power only (updates while sleeping)
+sudo pmset -c powernap 1
+sudo pmset -b powernap 0
+# Automatic restart after power failure (good for desktop-like usage)
+sudo pmset -a autorestart 1
+# Wake for network access when plugged in (allows remote access)
+sudo pmset -c womp 1
+sudo pmset -b womp 0
+
+# Disable sudden motion sensor (SSD only - not needed, saves CPU)
+sudo pmset -a sms 0
+
+#==============================================================================
+# Verification & Cleanup
+#==============================================================================
+
+info "Verifying critical settings..."
+
+# Verify a few critical settings applied
+verify_setting "com.apple.finder" "ShowPathbar" "1"
+verify_setting "com.apple.dock" "autohide" "1"
+verify_setting "NSGlobalDomain" "AppleShowAllExtensions" "1"
+verify_setting "com.apple.screensaver" "askForPassword" "1"
+
+# Restart affected apps
+restart_affected_apps
+
+success "macOS configuration complete!"
