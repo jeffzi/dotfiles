@@ -19,6 +19,8 @@
 	autoSetupRemote = true
 [includeIf "gitdir:~/.local/share/chezmoi/"]
     path = ~/.gitconfig-personal
+[includeIf "gitdir:~/.claude/"]
+    path = ~/.gitconfig-personal
 [includeIf "gitdir:~/Projects/personal/"]
     path = ~/.gitconfig-personal
 [includeIf "gitdir:~/Projects/work/"]
