@@ -47,7 +47,8 @@
       "Bash(/opt/homebrew/bin/uv:*)",
       "Bash(hash -r)",
       "Bash(uv self update:*)",
-      "Bash(1)"
+      "Bash(1)",
+      "Bash(git mv:*)"
     ]
   }
 }
