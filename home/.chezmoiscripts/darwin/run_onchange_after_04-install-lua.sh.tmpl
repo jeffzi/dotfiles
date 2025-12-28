@@ -47,6 +47,19 @@ install_lua() {
 # Install lux - modern Lua package manager
 #==============================================================================
 
+LUX_BIN="{{ .chezmoi.homeDir }}/.cargo/bin/lx"
+
+# Function to fix rpath for lux binary (needed for libc++ and liblua)
+fix_lux_rpath() {
+    if [ -f "$LUX_BIN" ]; then
+        # Check if rpath already exists
+        if ! otool -l "$LUX_BIN" | grep -q "/opt/homebrew/lib"; then
+            info "Fixing lux binary rpath..."
+            install_name_tool -add_rpath /opt/homebrew/lib "$LUX_BIN"
+        fi
+    fi
+}
+
 if ! command -v lx &> /dev/null; then
     info "Installing lux (modern Lua package manager)..."
 
@@ -77,14 +90,28 @@ if ! command -v lx &> /dev/null; then
     cd -
     rm -rf "$LUX_TMP_DIR"
 
+    fix_lux_rpath
     success "Lux installed with completions and man pages!"
 else
-    info "Updating lux..."
+    info "Checking for lux updates..."
     if command -v cargo-install-update &> /dev/null; then
-        cargo install-update lux-cli
+        # Only update if there's a newer version
+        if cargo install-update lux-cli --list | grep -q "Yes$"; then
+            cargo install-update lux-cli
+            fix_lux_rpath
+        else
+            info "Lux is already up to date"
+        fi
     else
-        cargo install lux-cli --locked --force
+        # Without cargo-update, check installed version vs latest
+        info "Installing cargo-update for better update checks..."
+        cargo install cargo-update
+        cargo install-update lux-cli
+        fix_lux_rpath
     fi
 fi
+
+# Ensure rpath is always correct (in case of manual cargo installs)
+fix_lux_rpath
 
 success "Lua installation complete!"
