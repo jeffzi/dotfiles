@@ -1,0 +1,39 @@
+#!/bin/bash
+set -eu
+
+# Fish plugins hash: {{ include "dot_config/fish/fish_plugins" | sha256sum }}
+
+{{ template "bash-lib" }}
+
+#==============================================================================
+# Configure fish shell
+#==============================================================================
+
+if ! command -v fish &> /dev/null; then
+    warning "Fish shell not found, skipping configuration"
+    exit 0
+fi
+
+info "Configuring fish shell..."
+if ! grep -q $(which fish) /etc/shells 2>/dev/null; then
+     info "Adding fish to /etc/shells..."
+     sudo bash -c 'echo $(which fish) >> /etc/shells' || warning "Failed to add fish to /etc/shells (needs sudo)"
+     chsh -s $(which fish) 2>/dev/null || warning "Failed to change shell to fish (run 'chsh -s $(which fish)' manually)"
+fi
+
+#==============================================================================
+# Install fish plugins via Fisher
+#==============================================================================
+
+info "Installing fish plugins..."
+fish -c "
+    # Install fisher if not present
+    if ! type -q fisher
+        curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source
+        fisher install jorgebucaran/fisher
+    end
+    # Update all plugins from fish_plugins
+    fisher update
+" || warning "Failed to update fish plugins"
+
+success "Fish configuration complete!"

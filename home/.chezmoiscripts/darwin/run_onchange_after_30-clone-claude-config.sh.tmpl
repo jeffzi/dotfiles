@@ -23,6 +23,9 @@ else
         git pull --rebase --autostash
         success "Claude Code configuration updated"
     else
-        warning "~/.claude exists but is not a git repository"
+        warning "~/.claude exists but is not a git repository, removing and re-cloning..."
+        rm -rf "$CLAUDE_DIR"
+        git clone "$CLAUDE_REPO" "$CLAUDE_DIR"
+        success "Claude Code configuration cloned successfully"
     fi
 fi
