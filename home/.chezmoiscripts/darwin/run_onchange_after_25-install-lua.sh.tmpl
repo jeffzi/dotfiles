@@ -47,6 +47,11 @@ install_lua() {
 # Install lux - modern Lua package manager
 #==============================================================================
 
+# Source cargo environment if not already in PATH
+if ! command -v cargo &> /dev/null && [ -f "{{ .chezmoi.homeDir }}/.cargo/env" ]; then
+    source "{{ .chezmoi.homeDir }}/.cargo/env"
+fi
+
 LUX_BIN="{{ .chezmoi.homeDir }}/.cargo/bin/lx"
 
 # Function to fix rpath for lux binary (needed for libc++ and liblua)
