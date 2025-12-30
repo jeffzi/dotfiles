@@ -1,5 +1,8 @@
 # Tool configurations
 
+# eza (modern ls replacement)
+set -gx EZA_CONFIG_DIR ~/.config/eza
+
 # Colorize man pages with bat
 set -gx MANROFFOPT -c
 set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
