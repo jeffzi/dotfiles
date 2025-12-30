@@ -1,0 +1,7 @@
+export PATH=/Users/jeffzi/.local/bin:$PATH
+
+# Added by dbt installer
+export PATH="$PATH:/Users/jeffzi/.local/bin"
+
+# dbt aliases
+alias dbtf=/Users/jeffzi/.local/bin/dbt
