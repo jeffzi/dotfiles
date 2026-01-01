@@ -1,6 +1,7 @@
 ci:
   autofix_commit_msg: "chore(pre-commit.ci): autofix"
   autoupdate_commit_msg: "chore(pre-commit.ci): autoupdate"
+  skip: [tombi-format]
 
 default_language_version:
   python: python3.13
