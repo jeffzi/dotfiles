@@ -1,7 +1,5 @@
-"$schema" = 'https://starship.rs/config-schema.json'
-
+"$schema" = "https://starship.rs/config-schema.json"
 palette = "catppuccin_mocha"
-
 add_newline = false
 
 [character]
@@ -18,7 +16,7 @@ style = "underline text"
 truncation_length = 5
 
 [git_branch]
-format = '[$symbol$branch(:$remote_branch)]($style) '
+format = "[$symbol$branch(:$remote_branch)]($style) "
 
 [git_status]
 conflicted = "✘"
@@ -79,13 +77,21 @@ disabled = true
 [python]
 format = '[${symbol} ${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
 # Use uv to detect Python version in uv-managed projects
-python_binary = [["uv", "run", "--no-project", "--no-python-downloads", "python"], "python3", "python"]
+python_binary = [
+  ["uv", "run", "--no-project", "--no-python-downloads", "python"],
+  "python3",
+  "python"
+]
 detect_extensions = ["py"]
-detect_files = ["requirements.txt", "pyproject.toml", ".python-version", "uv.lock"]
+detect_files = [
+  "requirements.txt",
+  "pyproject.toml",
+  ".python-version",
+  "uv.lock"
+]
 detect_folders = [".venv"]
 symbol = ""
 style = "bold green"
-
 
 [rlang]
 format = "[$symbol ($version )]($style)"
