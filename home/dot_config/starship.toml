@@ -4,34 +4,15 @@ palette = "catppuccin_mocha"
 
 add_newline = false
 
-# Module order
-format = """
-$username\
-$hostname\
-$directory\
-$git_branch\
-$git_status\
-$git_state\
-$git_commit\
-$python\
-$lua\
-$fennel\
-$rlang\
-$cmd_duration\
-$status\
-$time\
-$line_break\
-$character"""
-
 [character]
-error_symbol = "[✖](bold $red)"
+error_symbol = "[✖](bold red)"
 
 [cmd_duration]
 min_time = 1000
 min_time_to_notify = 60000
 show_milliseconds = true
 show_notifications = true
-style = "underline $text"
+style = "underline text"
 
 [directory]
 truncation_length = 5
@@ -45,11 +26,11 @@ deleted = "✝"
 format = '([\[$all_status$ahead_behind\]]($style) )'
 staged = "✚"
 stashed = "⚑"
-style = "bold $mauve"
+style = "bold mauve"
 
 [git_state]
 format = '[\($state( $progress_current of $progress_total)\)]($style) '
-style = "bold $yellow"
+style = "bold yellow"
 
 [git_commit]
 tag_symbol = " 🏷 "
@@ -58,7 +39,7 @@ only_detached = true
 [status]
 disabled = false
 format = '[\[$status\]]($style) '
-style = "bold $red"
+style = "bold red"
 
 [time]
 disabled = false
@@ -72,12 +53,14 @@ disabled = true
 [docker_context]
 disabled = true
 
-# Language module colors using Catppuccin Mocha palette for consistent theming
+# Language colors use Catppuccin Mocha palette instead of GitHub Linguist colors
+# for better readability on dark backgrounds
+# https://github.com/github-linguist/linguist/blob/master/lib/linguist/languages.yml
 
 [fennel]
 format = "[$symbol ($version )]($style)"
 symbol = ""
-style = "bold $yellow"
+style = "bold yellow"
 
 [gcloud]
 disabled = true
@@ -85,7 +68,7 @@ disabled = true
 [lua]
 format = "[$symbol ($version )]($style)"
 symbol = ""
-style = "bold $blue"
+style = "bold blue"
 
 [nodejs]
 disabled = true
@@ -95,16 +78,24 @@ disabled = true
 
 [python]
 format = '[${symbol} ${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
-python_binary = ["python3", "python"]
+# Use uv to detect Python version in uv-managed projects
+python_binary = [["uv", "run", "--no-project", "--no-python-downloads", "python"], "python3", "python"]
 detect_extensions = ["py"]
-detect_files = ["requirements.txt", "pyproject.toml", ".python-version"]
+detect_files = ["requirements.txt", "pyproject.toml", ".python-version", "uv.lock"]
+detect_folders = [".venv"]
 symbol = ""
-style = "bold $green"
+style = "bold green"
+
 
 [rlang]
 format = "[$symbol ($version )]($style)"
-symbol = "R"
-style = "bold $lavender"
+symbol = "󰟔"
+style = "bold lavender"
+
+[rust]
+format = "[$symbol ($version )]($style)"
+symbol = "󱘗"
+style = "bold peach"
 
 [vagrant]
 disabled = true
