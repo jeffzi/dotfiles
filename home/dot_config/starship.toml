@@ -1,16 +1,37 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
 palette = "catppuccin_mocha"
 
-# Don't print a new line at the start of the prompt
 add_newline = false
 
+# Module order
+format = """
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_status\
+$git_state\
+$git_commit\
+$python\
+$lua\
+$fennel\
+$rlang\
+$cmd_duration\
+$status\
+$time\
+$line_break\
+$character"""
+
 [character]
-error_symbol = "[✖](bold red)"
+error_symbol = "[✖](bold $red)"
 
 [cmd_duration]
 min_time = 1000
+min_time_to_notify = 60000
 show_milliseconds = true
 show_notifications = true
-style = "underline white"
+style = "underline $text"
 
 [directory]
 truncation_length = 5
@@ -24,7 +45,20 @@ deleted = "✝"
 format = '([\[$all_status$ahead_behind\]]($style) )'
 staged = "✚"
 stashed = "⚑"
-style = "bold purple"
+style = "bold $mauve"
+
+[git_state]
+format = '[\($state( $progress_current of $progress_total)\)]($style) '
+style = "bold $yellow"
+
+[git_commit]
+tag_symbol = " 🏷 "
+only_detached = true
+
+[status]
+disabled = false
+format = '[\[$status\]]($style) '
+style = "bold $red"
 
 [time]
 disabled = false
@@ -38,10 +72,12 @@ disabled = true
 [docker_context]
 disabled = true
 
+# Language module colors using Catppuccin Mocha palette for consistent theming
+
 [fennel]
 format = "[$symbol ($version )]($style)"
 symbol = ""
-style= 'bold yellow'
+style = "bold $yellow"
 
 [gcloud]
 disabled = true
@@ -49,6 +85,7 @@ disabled = true
 [lua]
 format = "[$symbol ($version )]($style)"
 symbol = ""
+style = "bold $blue"
 
 [nodejs]
 disabled = true
@@ -58,13 +95,16 @@ disabled = true
 
 [python]
 format = '[${symbol} ${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
-python_binary = ["./venv/bin/python", "python3", "python", "python2"]
+python_binary = ["python3", "python"]
+detect_extensions = ["py"]
+detect_files = ["requirements.txt", "pyproject.toml", ".python-version"]
 symbol = ""
-style= 'bold green'
+style = "bold $green"
 
 [rlang]
 format = "[$symbol ($version )]($style)"
 symbol = "R"
+style = "bold $lavender"
 
 [vagrant]
 disabled = true
