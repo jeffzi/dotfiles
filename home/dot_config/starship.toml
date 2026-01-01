@@ -6,11 +6,12 @@ add_newline = false
 error_symbol = "[✖](bold red)"
 
 [cmd_duration]
+format = "[󰋚 $duration]($style) "
+style = "underline subtext1"
 min_time = 1000
 min_time_to_notify = 60000
 show_milliseconds = true
 show_notifications = true
-style = "underline text"
 
 [directory]
 truncation_length = 5
@@ -41,8 +42,8 @@ style = "bold red"
 
 [time]
 disabled = false
-format = "$time($style) "
-style = "dimmed"
+style = "subtext1"
+format = "[$time]($style) "
 time_format = "%Y-%m-%d %T"
 
 [aws]
