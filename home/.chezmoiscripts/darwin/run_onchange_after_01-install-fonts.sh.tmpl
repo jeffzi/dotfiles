@@ -1,0 +1,15 @@
+#!/bin/bash
+set -eu
+
+# Fonts hash: {{ glob (joinPath .chezmoi.sourceDir "../assets/fonts/*.ttf") | join "\n" | sha256sum }}
+
+{{ template "bash-lib" }}
+
+info "Installing fonts..."
+
+FONT_DIR="$HOME/Library/Fonts"
+mkdir -p "$FONT_DIR"
+
+cp {{ .chezmoi.sourceDir }}/../assets/fonts/*.ttf "$FONT_DIR/"
+
+success "Fonts installed!"

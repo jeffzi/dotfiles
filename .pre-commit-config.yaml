@@ -11,6 +11,7 @@ repos:
     rev: v6.0.0
     hooks:
       - id: check-added-large-files
+        exclude: ^assets/fonts/
       - id: check-case-conflict
       - id: check-executables-have-shebangs
       - id: check-json
