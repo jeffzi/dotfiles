@@ -13,6 +13,7 @@ set -gx PROJECT_PATHS ~/Projects ~/Projects/personal ~/Projects/work/metamoki ~/
 
 # Homebrew
 set -gx HOMEBREW_CASK_OPTS --no-quarantine
+set -gx HOMEBREW_NO_ENV_HINTS 1
 
 # Lua
 set -gx LUA_INIT "local ok, ic = pcall(require, 'icecream'); if ok and type(ic.export) == 'function' then ic:export() end"
