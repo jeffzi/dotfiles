@@ -1,5 +1,8 @@
 # jeffzi's Dotfiles
 
+[![pre-commit](https://github.com/jeffzi/dotfiles/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/jeffzi/dotfiles/actions/workflows/pre-commit.yaml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 MacOS dotfiles managed with [chezmoi](https://www.chezmoi.io) and
 [Mackup](https://github.com/lra/mackup).
 
