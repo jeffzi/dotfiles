@@ -93,5 +93,5 @@ $RECYCLE.BIN/
 # Claude
 #==============================================================================
 
-.claude/plans/
-docs/plans/
+**.claude/plans/
+**/docs/plan
