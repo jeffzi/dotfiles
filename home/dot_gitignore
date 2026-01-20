@@ -95,3 +95,4 @@ $RECYCLE.BIN/
 
 **.claude/plans/
 **/docs/plan
+**/.claude/settings.local.json
