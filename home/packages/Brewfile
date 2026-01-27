@@ -32,6 +32,8 @@ brew "openjdk"
 brew "pkgconf"  # Required by lux-cli (Lua package manager) cargo build
 brew "ripgrep"
 brew "rsync"
+brew "shellcheck"
+brew "shfmt"
 brew "starship"
 brew "stylua"
 brew "tldr"
