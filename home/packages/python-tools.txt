@@ -1,7 +1,4 @@
-black
-mypy
+basedpyright
 parquet-tools
-poetry
-pre-commit
-pytest
+prek
 ruff
