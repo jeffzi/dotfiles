@@ -37,12 +37,12 @@ function cc-savings -d "Show combined token savings from Headroom proxy and RTK"
         if test $status -eq 0 -a -n "$rtk_json"
             set -l rtk_saved (echo "$rtk_json" | jq -r '.summary.total_saved // 0')
             set -l rtk_total (echo "$rtk_json" | jq -r '(.summary.total_input // 0) + (.summary.total_saved // 0)')
-            set -l avg_pct (echo "$rtk_json" | jq -r '.summary.avg_savings_pct // 0 | . * 10 | round | . / 10')
+            set -l pct (echo "$rtk_json" | jq -r '(.summary.total_saved // 0) as $s | ((.summary.total_input // 0) + $s) as $t | if $t > 0 then $s / $t * 100 | . * 10 | round | . / 10 else 0 end')
             set -l cmds (echo "$rtk_json" | jq -r '.summary.total_commands // 0')
             echo ""
             echo "RTK CLI Filtering"
             echo "─────────────────"
-            printf "  Tokens saved:   %s / %s  (%s%%)\n" "$rtk_saved" "$rtk_total" "$avg_pct"
+            printf "  Tokens saved:   %s / %s  (%s%%)\n" "$rtk_saved" "$rtk_total" "$pct"
             printf "  Commands:       %s\n" "$cmds"
         end
     end
