@@ -1,4 +1,5 @@
 # CLI tools
+brew "ast-grep"
 brew "awscli"
 brew "bash"
 brew "bat"
@@ -79,7 +80,6 @@ cask "mkvtoolnix-app"
 cask "mullvad-browser"
 cask "proton-mail-bridge"
 cask "protonvpn"
-cask "raycast"
 cask "shottr"
 cask "slack"
 cask "spaceid"
