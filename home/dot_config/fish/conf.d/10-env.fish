@@ -11,6 +11,12 @@ set -gx EZA_LT_OPTIONS --tree --no-permissions --no-user
 # https://github.com/oh-my-fish/plugin-pj
 set -gx PROJECT_PATHS ~/Projects ~/Projects/personal ~/Projects/work/metamoki ~/Projects/work/metamoki/data-engineering/projects ~/Projects/work/metamoki/data-engineering/libs
 
+# Claude Code — use system ripgrep instead of the bundled Node.js wrapper
+set -gx USE_BUILTIN_RIPGREP 0
+
+# RTK — disable telemetry
+set -gx RTK_TELEMETRY_DISABLED 1
+
 # Homebrew
 set -gx HOMEBREW_CASK_OPTS --no-quarantine
 set -gx HOMEBREW_NO_ENV_HINTS 1
