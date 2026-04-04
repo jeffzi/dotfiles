@@ -18,5 +18,5 @@ function cc -d "Launch Claude Code through Headroom proxy for token compression"
         echo "Headroom proxy ready."
     end
 
-    ANTHROPIC_BASE_URL=http://localhost:8787 claude $argv
+    ANTHROPIC_BASE_URL=http://localhost:8787 claude --dangerously-skip-permissions $argv
 end
