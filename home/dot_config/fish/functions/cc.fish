@@ -1,8 +1,14 @@
 function cc -d "Launch Claude Code through Headroom proxy for token compression"
     # Start Headroom proxy if not already running
     if not curl -sf http://localhost:8787/health >/dev/null 2>&1
+        # Rotate log if > 5MB
+        set -l log_file ~/.headroom/proxy.log
+        if test -f $log_file; and test (stat -f%z $log_file) -gt 5242880
+            mv $log_file $log_file.1
+        end
+
         echo "Starting Headroom proxy..."
-        headroom proxy --no-telemetry &
+        headroom proxy --no-telemetry --log-file $log_file >/dev/null 2>&1 &
         disown
 
         # Wait for proxy to become healthy
