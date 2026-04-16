@@ -13,6 +13,7 @@ set -gx PROJECT_PATHS ~/Projects ~/Projects/personal ~/Projects/work/metamoki ~/
 
 # Claude Code — use system ripgrep instead of the bundled Node.js wrapper
 set -gx USE_BUILTIN_RIPGREP 0
+set -gx CLAUDE_CODE_REPL true
 
 # RTK — disable telemetry
 set -gx RTK_TELEMETRY_DISABLED 1
