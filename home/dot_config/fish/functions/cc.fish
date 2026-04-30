@@ -7,6 +7,9 @@ function cc -d "Launch Claude Code through Headroom proxy for token compression"
             mv $log_file $log_file.1
         end
 
+        echo "Upgrading Headroom..."
+        uv tool upgrade headroom-ai
+
         echo "Starting Headroom proxy..."
         headroom proxy --no-telemetry --log-file $log_file >/dev/null 2>&1 &
         disown
