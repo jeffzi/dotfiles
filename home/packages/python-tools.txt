@@ -1,4 +1,3 @@
-basedpyright
-parquet-tools
+pyrefly
 prek
 ruff

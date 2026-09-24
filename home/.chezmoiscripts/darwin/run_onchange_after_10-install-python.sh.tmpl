@@ -1,5 +1,4 @@
-#!/bin/bash
-set -eu
+#!/usr/bin/env bash
 
 # Python tools hash: {{ include "packages/python-tools.txt" | sha256sum }}
 
@@ -12,14 +11,10 @@ set -eu
 info "Installing Python 3.8 for legacy projects..."
 uv python install 3.8
 
+# Without --force or --upgrade, uv leaves an installed tool at its current
+# version; upgrades belong to the `update` fish function.
 info "Installing Python tools..."
-while IFS= read -r package || [[ -n "$package" ]]; do
-    [[ -z "$package" || "$package" =~ ^# ]] && continue
-    uv tool install --force "$package"
-done < {{ .chezmoi.sourceDir }}/packages/python-tools.txt
-
-info "Configuring poetry..."
-uv tool run poetry config virtualenvs.in-project true
+foreach_package "{{ .chezmoi.sourceDir }}/packages/python-tools.txt" uv tool install
 
 info "Injecting pytest plugins..."
 uv tool install pytest --with pytest-clarity --with pytest-sugar

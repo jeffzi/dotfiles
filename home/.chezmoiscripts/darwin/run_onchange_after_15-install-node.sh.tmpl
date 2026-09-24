@@ -1,5 +1,4 @@
-#!/bin/bash
-set -eu
+#!/usr/bin/env bash
 
 # npm packages hash: {{ include "packages/node-tools.txt" | sha256sum }}
 
@@ -9,10 +8,35 @@ set -eu
 # Install NodeJS packages
 #==============================================================================
 
+NPM_ROOT=$(npm root -g)
+readonly NPM_ROOT
+
+# Installs a package only when it is missing, or when the list pins a version
+# other than the installed one. Upgrades belong to the `update` fish function.
+#   install_npm_package <name>[@<version>]
+install_npm_package() {
+    local spec="$1"
+    # The version separator is the last "@" after the first character, so a
+    # scoped name (@scope/pkg) keeps its leading "@".
+    local name="$spec" pinned=""
+    if [[ "${spec:1}" == *@* ]]; then
+        name="${spec%@*}"
+        pinned="${spec##*@}"
+    fi
+
+    local manifest="$NPM_ROOT/$name/package.json"
+    if [[ -f "$manifest" ]]; then
+        local installed
+        installed=$(jq -r .version "$manifest") || return 1
+        if [[ -z "$pinned" || "$installed" == "$pinned" ]]; then
+            return 0
+        fi
+    fi
+
+    npm install -g --loglevel=error "$spec"
+}
+
 info "Installing global npm packages..."
-while IFS= read -r package || [[ -n "$package" ]]; do
-    [[ -z "$package" || "$package" =~ ^# ]] && continue
-    npm install -g --loglevel=error "$package"
-done < {{ .chezmoi.sourceDir }}/packages/node-tools.txt
+foreach_package "{{ .chezmoi.sourceDir }}/packages/node-tools.txt" install_npm_package
 
 success "Node toolchain installation complete!"

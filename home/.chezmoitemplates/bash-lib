@@ -1,57 +1,83 @@
 set -eu
 
-color() {
-  color_code="$1"
-  shift
+# Scripts inherit PATH from whatever launched chezmoi, which lacks tools that an
+# earlier script in the same apply installed (rustup, uv tools). Every script
+# gets the same PATH here so none has to locate tools on its own.
+if [[ -x /opt/homebrew/bin/brew ]]; then
+	eval "$(/opt/homebrew/bin/brew shellenv bash)"
+	# shellenv prints nothing when PATH already starts with Homebrew's bin, so
+	# the prefix is not guaranteed to be exported by the line above.
+	export HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-$(/opt/homebrew/bin/brew --prefix)}"
+fi
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 
-  printf "\033[${color_code}m%s\033[0m\n" "$*" >&2
+color() {
+	local color_code="$1"
+	shift
+
+	printf "\033[${color_code}m%s\033[0m\n" "$*" >&2
 }
 
 info() {
-  color "0;36" "=> $*"
+	color "0;36" "=> $*"
 }
 
 error() {
-  color "0;31" "$@"
-  exit 1
+	color "0;31" "$@"
+	exit 1
 }
 
 success() {
-  color "1;32" "$@"
+	color "1;32" "$@"
 }
 
 warning() {
-  color "1;33" "⚠️  $*"
+	color "1;33" "⚠️  $*"
 }
 
 manual_action() {
-  color "1;33" "$@"
+	color "1;33" "$@"
+}
+
+# Read a package list file (one package per line, # comments, blank lines
+# skipped) and run a command for each entry. Exits naming the entry whose
+# command failed, so chezmoi re-runs the calling script on the next apply.
+#   foreach_package <file> <command...>
+foreach_package() {
+	local file="$1"
+	shift
+	local package
+	while IFS= read -r package || [[ -n "$package" ]]; do
+		[[ -z "$package" || "$package" =~ ^# ]] && continue
+		"$@" "$package" || error "Failed to install $package"
+	done <"$file"
 }
 
 sudo() {
-  # source: https://github.com/felipecrs/dis totfiles/blob/master/home/.chezmoitemplates/scripts-library
-  local exec=false
-  echo "sudo "  "$@"
-  if [[ "$1" == "exec" ]]; then
-    shift
-    exec=true
-  fi
+	# source: https://github.com/felipecrs/dotfiles/blob/master/home/.chezmoitemplates/scripts-library
+	local exec=false
+	printf "sudo %s\n" "$*" >&2
+	if [[ "$1" == "exec" ]]; then
+		shift
+		exec=true
+	fi
 
-  if [[ "$(id -u)" -eq 0 ]]; then
-    if [[ "${exec}" == "true" ]]; then
-      exec "$@"
-    else
-      "$@"
-    fi
-  else
-    if ! (command sudo --non-interactive true 2>/dev/null); then
-      manual_action "Root privileges are required, please enter your password below"
-      command sudo --validate
-    fi
-    if [[ "${exec}" == "true" ]]; then
-      exec sudo "$@"
-    else
-      command sudo "$@"
-    fi
-  fi
+	if [[ "$(id -u)" -eq 0 ]]; then
+		if [[ "${exec}" == "true" ]]; then
+			exec "$@"
+		else
+			"$@"
+		fi
+	else
+		if ! (command sudo --non-interactive true 2>/dev/null); then
+			manual_action "Root privileges are required, please enter your password below"
+			# A refused password must fail here: falling through would prompt again.
+			command sudo --validate || return 1
+		fi
+		if [[ "${exec}" == "true" ]]; then
+			exec sudo "$@"
+		else
+			command sudo "$@"
+		fi
+	fi
 }

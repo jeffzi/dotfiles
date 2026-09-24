@@ -1,7 +1,9 @@
-#!/bin/bash
-set -eu
+#!/usr/bin/env bash
 
 {{ template "bash-lib" }}
+
+# Installs what is missing only: existing Lua builds and hererocks are never
+# upgraded here. Upgrades belong to the `update` fish function.
 
 #==============================================================================
 # Install Lua & LuaJIT via hererocks
@@ -9,34 +11,30 @@ set -eu
 
 info "Installing Lua & LuaJIT..."
 
-# Install or update hererocks
-if uv tool list | grep -q "^hererocks "; then
-    info "Updating hererocks..."
-    uv tool upgrade hererocks
-else
+if ! command -v hererocks &> /dev/null; then
     info "Installing hererocks..."
-    uv tool install --force git+https://github.com/luarocks/hererocks
+    uv tool install git+https://github.com/luarocks/hererocks
 fi
 
-# Lua installation paths
-LUA_BASE="{{ .chezmoi.homeDir }}/.local/share/lua"
-HEREROCKS="{{ .chezmoi.homeDir }}/.local/bin/hererocks"
+LUA_BASE="$HOME/.local/share/lua"
 
-# Function to install Lua version
 install_lua() {
     local display_name="$1"
     local dir_name="$2"
     local path="$LUA_BASE/$dir_name"
     shift 2
 
-    if [ ! -d "$path/bin" ]; then
+    if [[ ! -d "$path/bin" ]]; then
         info "Installing $display_name..."
-        "$HEREROCKS" "$path" "$@"
+        hererocks "$path" "$@"
     fi
 }
 
+macos_version=$(sw_vers -productVersion)
+IFS=. read -r macos_major macos_minor _ <<<"$macos_version"
+
 (
-    export MACOSX_DEPLOYMENT_TARGET=26.2
+    export MACOSX_DEPLOYMENT_TARGET="${macos_major}.${macos_minor:-0}"
 
     install_lua "LuaJIT v2.1" "luajit" --luajit @v2.1 --luarocks latest
     install_lua "Lua 5.5" "lua5.5" --lua 5.5 --luarocks latest
@@ -44,81 +42,5 @@ install_lua() {
     install_lua "Lua 5.3" "lua5.3" --lua 5.3 --luarocks latest
     install_lua "Lua 5.1" "lua5.1" --lua 5.1 --luarocks latest
 )
-
-#==============================================================================
-# Install lux - modern Lua package manager
-#==============================================================================
-
-# Source cargo environment if not already in PATH
-if ! command -v cargo &> /dev/null && [ -f "{{ .chezmoi.homeDir }}/.cargo/env" ]; then
-    source "{{ .chezmoi.homeDir }}/.cargo/env"
-fi
-
-LUX_BIN="{{ .chezmoi.homeDir }}/.cargo/bin/lx"
-
-# Function to fix rpath for lux binary (needed for libc++ and liblua)
-fix_lux_rpath() {
-    if [ -f "$LUX_BIN" ]; then
-        # Check if rpath already exists
-        if ! otool -l "$LUX_BIN" | grep -q "/opt/homebrew/lib"; then
-            info "Fixing lux binary rpath..."
-            install_name_tool -add_rpath /opt/homebrew/lib "$LUX_BIN"
-        fi
-    fi
-}
-
-if ! command -v lx &> /dev/null; then
-    info "Installing lux (modern Lua package manager)..."
-
-    # Install binary via cargo (easy to update with cargo-update)
-    cargo install lux-cli --locked
-
-    # Clone repo to generate completions and man pages
-    LUX_TMP_DIR=$(mktemp -d)
-    git clone --depth 1 https://github.com/lumen-oss/lux.git "$LUX_TMP_DIR"
-    cd "$LUX_TMP_DIR"
-
-    # Generate completions and man pages using xtask
-    info "Generating completions and man pages..."
-    cargo xtask dist-completions
-    cargo xtask dist-man
-
-    # Install completions
-    info "Installing shell completions..."
-    mkdir -p {{ .chezmoi.homeDir }}/.local/share/fish/vendor_completions.d
-    cp target/dist/lx.fish {{ .chezmoi.homeDir }}/.local/share/fish/vendor_completions.d/lx.fish
-
-    # Install man pages
-    info "Installing man pages..."
-    mkdir -p {{ .chezmoi.homeDir }}/.local/share/man/man1
-    cp target/dist/*.1 {{ .chezmoi.homeDir }}/.local/share/man/man1/
-
-    # Cleanup
-    cd -
-    rm -rf "$LUX_TMP_DIR"
-
-    fix_lux_rpath
-    success "Lux installed with completions and man pages!"
-else
-    info "Checking for lux updates..."
-    if command -v cargo-install-update &> /dev/null; then
-        # Only update if there's a newer version
-        if cargo install-update lux-cli --list | grep -q "Yes$"; then
-            cargo install-update lux-cli
-            fix_lux_rpath
-        else
-            info "Lux is already up to date"
-        fi
-    else
-        # Without cargo-update, check installed version vs latest
-        info "Installing cargo-update for better update checks..."
-        cargo install cargo-update
-        cargo install-update lux-cli
-        fix_lux_rpath
-    fi
-fi
-
-# Ensure rpath is always correct (in case of manual cargo installs)
-fix_lux_rpath
 
 success "Lua installation complete!"

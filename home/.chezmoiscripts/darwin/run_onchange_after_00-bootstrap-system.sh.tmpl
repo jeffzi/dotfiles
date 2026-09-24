@@ -1,5 +1,4 @@
-#!/bin/bash
-set -eu
+#!/usr/bin/env bash
 
 # Brewfile hash: {{ include "packages/Brewfile" | sha256sum }}
 
@@ -9,14 +8,12 @@ set -eu
 # Install Homebrew packages
 #==============================================================================
 
-if ! command -v brew &> /dev/null; then
-    info "Installing Homebrew..."
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-fi
+command -v brew &> /dev/null || error "Homebrew is not installed. Bootstrap this machine with install.sh, which installs it."
 
 info "Installing Homebrew packages..."
-export HOMEBREW_CASK_OPTS="--no-quarantine --force --overwrite"
-brew bundle --file={{ .chezmoi.sourceDir }}/packages/Brewfile
+export HOMEBREW_CASK_OPTS="--force"
+# Install what is missing only: upgrades belong to the `update` fish function.
+brew bundle --no-upgrade --file="{{ .chezmoi.sourceDir }}/packages/Brewfile"
 
 info "Cleaning up..."
 brew autoremove
@@ -29,7 +26,7 @@ brew cleanup
 if mas list | grep -q Xcode; then
   # Only set xcode-select if it's not already pointing to the right path
   CURRENT_XCODE_PATH=$(xcode-select -p 2>/dev/null || echo "")
-  if [ "$CURRENT_XCODE_PATH" != "/Applications/Xcode.app/Contents/Developer" ]; then
+  if [[ "$CURRENT_XCODE_PATH" != "/Applications/Xcode.app/Contents/Developer" ]]; then
     info "Setting Xcode developer directory..."
     sudo xcode-select -s /Applications/Xcode.app/Contents/Developer || warning "Failed to set Xcode path (needs sudo)"
   fi
@@ -39,7 +36,7 @@ if mas list | grep -q Xcode; then
     XCODE_VERSION=$(xcodebuild -version 2>/dev/null | grep '^Xcode\s' | sed -E 's/^Xcode[[:space:]]+([0-9\.]+)/\1/' || echo "")
     ACCEPTED_LICENSE_VERSION=$(defaults read /Library/Preferences/com.apple.dt.Xcode 2> /dev/null | grep IDEXcodeVersionForAgreedToGMLicense | cut -d '"' -f 2 || echo "")
 
-    if [ -n "$XCODE_VERSION" ] && [ "$XCODE_VERSION" != "$ACCEPTED_LICENSE_VERSION" ]; then
+    if [[ -n "$XCODE_VERSION" && "$XCODE_VERSION" != "$ACCEPTED_LICENSE_VERSION" ]]; then
       info "Accepting Xcode license..."
       xcodebuild -runFirstLaunch 2>/dev/null || true
       sudo xcodebuild -license accept || warning "Failed to accept Xcode license (needs sudo)"
@@ -55,8 +52,8 @@ info "Configuring docker + colima..."
 
 # Compose is now a Docker plugin. For Docker to find this plugin, symlink it
 mkdir -p ~/.docker/cli-plugins
-ln -sfn /opt/homebrew/opt/docker-compose/bin/docker-compose ~/.docker/cli-plugins/docker-compose
-ln -sfn /opt/homebrew/bin/docker-buildx ~/.docker/cli-plugins/docker-buildx
+ln -sfn "$HOMEBREW_PREFIX/opt/docker-compose/bin/docker-compose" ~/.docker/cli-plugins/docker-compose
+ln -sfn "$HOMEBREW_PREFIX/bin/docker-buildx" ~/.docker/cli-plugins/docker-buildx
 
 #==============================================================================
 # Misc

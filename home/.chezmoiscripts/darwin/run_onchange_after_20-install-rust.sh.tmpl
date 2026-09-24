@@ -1,7 +1,4 @@
-#!/bin/bash
-set -eu
-
-# Rust tools hash: {{ include "packages/rust-tools.txt" | sha256sum }}
+#!/usr/bin/env bash
 
 {{ template "bash-lib" }}
 
@@ -9,44 +6,21 @@ set -eu
 # Install Rust via rustup
 #==============================================================================
 
+# Installs what is missing only: an installed toolchain is never updated here.
+# Upgrades belong to the `update` fish function.
+
 if ! command -v rustup &> /dev/null; then
     info "Installing rustup..."
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
-
-    # Source cargo env for current session
-    source {{ .chezmoi.homeDir }}/.cargo/env
 fi
 
-info "Updating Rust toolchain..."
-rustup update stable
+if ! rustup toolchain list | grep -q '^stable-'; then
+    info "Installing Rust stable toolchain..."
+    rustup toolchain install stable
+fi
 rustup default stable
 
 info "Installing Rust components..."
 rustup component add clippy rustfmt rust-analyzer
-
-#==============================================================================
-# Install cargo packages
-#==============================================================================
-
-info "Installing cargo packages..."
-while IFS= read -r package || [[ -n "$package" ]]; do
-    [[ -z "$package" || "$package" =~ ^# ]] && continue
-
-    # Check if package is already installed to avoid long rebuilds
-    if ! cargo install --list | grep -q "^${package} "; then
-        cargo install "$package"
-    else
-        info "  ✓ $package already installed, skipping..."
-    fi
-done < {{ .chezmoi.sourceDir }}/packages/rust-tools.txt
-
-#==============================================================================
-# Update installed cargo packages
-#==============================================================================
-
-if command -v cargo-install-update &> /dev/null; then
-    info "Updating cargo packages..."
-    cargo install-update -a
-fi
 
 success "Rust toolchain installation complete!"

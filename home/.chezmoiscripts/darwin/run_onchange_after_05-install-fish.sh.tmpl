@@ -1,5 +1,4 @@
-#!/bin/bash
-set -eu
+#!/usr/bin/env bash
 
 # Fish plugins hash: {{ include "dot_config/fish/fish_plugins" | sha256sum }}
 
@@ -15,10 +14,19 @@ if ! command -v fish &> /dev/null; then
 fi
 
 info "Configuring fish shell..."
-if ! grep -q $(which fish) /etc/shells 2>/dev/null; then
-     info "Adding fish to /etc/shells..."
-     sudo bash -c 'echo $(which fish) >> /etc/shells' || warning "Failed to add fish to /etc/shells (needs sudo)"
-     chsh -s $(which fish) 2>/dev/null || warning "Failed to change shell to fish (run 'chsh -s $(which fish)' manually)"
+fish_path=$(command -v fish)
+
+if ! grep -qxF "$fish_path" /etc/shells; then
+    info "Adding fish to /etc/shells..."
+    printf '%s\n' "$fish_path" | sudo tee -a /etc/shells >/dev/null || warning "Failed to add fish to /etc/shells (needs sudo)"
+fi
+
+# Checked on its own so a chsh that failed on an earlier run is retried.
+login_shell=$(dscl . -read "/Users/$(id -un)" UserShell)
+login_shell="${login_shell#UserShell: }"
+if [[ "$login_shell" != "$fish_path" ]]; then
+    info "Changing login shell to fish..."
+    chsh -s "$fish_path" || warning "Failed to change shell to fish (run 'chsh -s $fish_path' manually)"
 fi
 
 #==============================================================================
@@ -26,6 +34,8 @@ fi
 #==============================================================================
 
 info "Installing fish plugins..."
+# Fisher has no install-only mode: syncing to fish_plugins also upgrades the
+# plugins already installed. This runs only when fish_plugins changes.
 fish -c "
     # Install fisher if not present
     if ! type -q fisher
