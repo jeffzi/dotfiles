@@ -13,7 +13,7 @@ if test -f ~/.local/share/lua/luajit/bin/activate.fish
 end
 
 # Fish configuration
-set -g fish_greeting  # no greeting
+set -g fish_greeting # no greeting
 
 # System limits
-ulimit -n 10240  # increase max open file descriptors (default: 256)
+ulimit -n 10240 # increase max open file descriptors (default: 256)

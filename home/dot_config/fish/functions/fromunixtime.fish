@@ -4,7 +4,7 @@ function fromunixtime -d "Convert unix time (seconds or milliseconds) to a strin
         return 1
     end
 
-   set timestamp_length (string length $argv[1])
+    set timestamp_length (string length $argv[1])
 
     if test $timestamp_length -eq 10
         # Handling seconds since epoch

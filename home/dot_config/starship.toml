@@ -78,18 +78,9 @@ disabled = true
 [python]
 format = '[${symbol} ${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
 # Use uv to detect Python version in uv-managed projects
-python_binary = [
-  ["uv", "run", "--no-project", "--no-python-downloads", "python"],
-  "python3",
-  "python"
-]
+python_binary = [["uv", "run", "--no-project", "--no-python-downloads", "python"], "python3", "python"]
 detect_extensions = ["py"]
-detect_files = [
-  "requirements.txt",
-  "pyproject.toml",
-  ".python-version",
-  "uv.lock"
-]
+detect_files = ["requirements.txt", "pyproject.toml", ".python-version", "uv.lock"]
 detect_folders = [".venv"]
 symbol = ""
 style = "bold green"

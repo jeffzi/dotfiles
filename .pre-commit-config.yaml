@@ -1,17 +1,15 @@
-ci:
-  autofix_commit_msg: "chore(pre-commit.ci): autofix"
-  autoupdate_commit_msg: "chore(pre-commit.ci): autoupdate"
-  skip: [tombi-format]
-
+# Keep in step with python-version in .github/workflows/pre-commit.yaml.
 default_language_version:
-  python: python3.13
+  python: python3.14
+
+default_install_hook_types: [pre-commit, commit-msg]
+default_stages: [pre-commit]
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
       - id: check-added-large-files
-        exclude: ^assets/fonts/
       - id: check-case-conflict
       - id: check-executables-have-shebangs
       - id: check-json
@@ -25,22 +23,64 @@ repos:
       - id: mixed-line-ending
       - id: trailing-whitespace
 
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v4.0.0-alpha.8
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+
+  - repo: local
     hooks:
       - id: prettier
+        name: prettier
+        language: node
+        types: [text]
         additional_dependencies:
-          - prettier@2.7.1
-          - "@prettier/plugin-xml@2.2.0"
+          - prettier@3.9.8
+          - "@prettier/plugin-xml@3.4.2"
+        # Prettier 3 no longer discovers plugins on its own and resolves a
+        # plugin name from the working directory, where none is installed; the
+        # hook environment exposes its module directory as NODE_PATH. Without
+        # the XML plugin every plist and tmTheme is skipped as an unknown type.
+        entry: >-
+          bash -c 'exec prettier
+          --plugin="${NODE_PATH%%:*}/@prettier/plugin-xml/src/plugin.js"
+          --write --ignore-unknown "$@"' --
+
+  # Chezmoi script templates are not valid bash until rendered, so the shell
+  # hooks cover only the files that are plain bash on disk.
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1-1
+    hooks:
+      - id: shellcheck
+        args: [--shell=bash]
+        files: &shell_files ^(install\.sh|assets/fonts/build\.sh|home/\.chezmoitemplates/bash-lib)$
+        types: [file]
+
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.14.1-1
+    hooks:
+      - id: shfmt
+        files: *shell_files
+        types: [file]
+
+  - repo: local
+    hooks:
+      # Matches plain fish files only: fish_indent rewrites the Go template
+      # actions in *.fish.tmpl (`{{- if … }}` becomes `{ { - if … } }`).
+      - id: fish-indent
+        name: fish_indent
+        entry: fish_indent --check
+        language: system
+        files: \.fish$
 
   - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
-    rev: v9.24.0
+    rev: v9.27.0
     hooks:
       - id: commitlint
         stages: [commit-msg]
         additional_dependencies: ["@commitlint/config-conventional"]
 
   - repo: https://github.com/tombi-toml/tombi-pre-commit
-    rev: v0.7.27
+    rev: v1.5.5
     hooks:
       - id: tombi-format

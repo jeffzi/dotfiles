@@ -1,0 +1,8 @@
+root = true
+
+[{*.sh,bash-lib}]
+indent_style = tab
+
+[*.fish]
+indent_style = space
+indent_size = 4
