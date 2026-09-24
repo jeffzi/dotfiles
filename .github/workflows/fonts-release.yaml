@@ -1,0 +1,63 @@
+name: fonts-release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Upstream maple-font tag. Empty uses the tag pinned in assets/fonts/build.sh.
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      UPSTREAM_TAG: ${{ inputs.tag }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v10.2.0
+
+      - name: Resolve build configuration
+        id: config
+        run: |
+          if [[ -n "$UPSTREAM_TAG" ]]; then
+            assets/fonts/build.sh --show "$UPSTREAM_TAG" >>"$GITHUB_OUTPUT"
+          else
+            assets/fonts/build.sh --show >>"$GITHUB_OUTPUT"
+          fi
+
+      # A published asset is pinned by checksum in .chezmoiexternal.toml, so it
+      # must never be replaced. Checked before the build because the build is slow.
+      - name: Refuse to overwrite an existing release
+        env:
+          RELEASE_TAG: fonts-${{ steps.config.outputs.tag }}
+        run: |
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "::error::Release $RELEASE_TAG already exists"
+            exit 1
+          fi
+
+      - name: Build fonts
+        id: build
+        env:
+          TAG: ${{ steps.config.outputs.tag }}
+        run: assets/fonts/build.sh -o dist "$TAG" >>"$GITHUB_OUTPUT"
+
+      - name: Publish release
+        env:
+          RELEASE_TAG: fonts-${{ steps.config.outputs.tag }}
+          TAG: ${{ steps.build.outputs.tag }}
+          FLAGS: ${{ steps.build.outputs.flags }}
+          ZIP: ${{ steps.build.outputs.zip }}
+          SHA256: ${{ steps.build.outputs.sha256 }}
+        run: |
+          notes=$(printf 'Maple Mono NF CN built from subframe7536/maple-font %s.\n\nBuild flags: %s\n\nSHA-256: %s\n\nBuilt by assets/fonts/build.sh at %s.\n' \
+            "$TAG" "$FLAGS" "$SHA256" "$GITHUB_SHA")
+          gh release create "$RELEASE_TAG" "$ZIP" \
+            --target "$GITHUB_SHA" \
+            --title "Maple Mono NF CN $TAG" \
+            --notes "$notes"
