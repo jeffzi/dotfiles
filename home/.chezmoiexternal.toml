@@ -2,3 +2,11 @@
 type = "archive"
 url = "https://github.com/Hammerspoon/Spoons/raw/master/Spoons/EmmyLua.spoon.zip"
 stripComponents = 0
+refreshPeriod = "168h"
+
+# Works around a macOS bug where the stock Unicode Hex Input layout cannot type
+# characters whose hex code both starts and ends with 0 (e.g. à = 00E0).
+["Library/Keyboard Layouts/unicode-hex-popup.keylayout"]
+type = "file"
+url = "https://raw.githubusercontent.com/ldanet/unicode-hex-input-fix/main/unicode-hex-popup.keylayout"
+refreshPeriod = "168h"
