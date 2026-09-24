@@ -1,29 +1,41 @@
 [core]
-  editor = code --wait
-  excludesfile = ~/.gitignore
+	editor = code --wait
+	excludesfile = ~/.gitignore
 [diff]
-  tool = vscode
+	tool = vscode
 [difftool "vscode"]
-  cmd = code --wait --diff $LOCAL $REMOTE
+	cmd = code --wait --diff $LOCAL $REMOTE
 [merge]
-  tool = vscode
+	tool = vscode
 [mergetool "vscode"]
-  cmd = code --wait $MERGED
+	cmd = code --wait $MERGED
 [gpg]
 	format = ssh
 [gpg "ssh"]
 	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+	allowedSignersFile = ~/.config/git/allowed_signers
 [commit]
 	gpgsign = true
 [push]
 	autoSetupRemote = true
 [includeIf "gitdir:~/.local/share/chezmoi/"]
-    path = ~/.gitconfig-personal
+	path = ~/.gitconfig-personal
 [includeIf "gitdir:~/.claude/"]
-    path = ~/.gitconfig-personal
+	path = ~/.gitconfig-personal
+[includeIf "gitdir:~/.codex/"]
+	path = ~/.gitconfig-personal
+[includeIf "gitdir:~/.config/"]
+	path = ~/.gitconfig-personal
 [includeIf "gitdir:~/Projects/personal/"]
-    path = ~/.gitconfig-personal
+	path = ~/.gitconfig-personal
 [includeIf "gitdir:~/Projects/work/"]
-    path = ~/.gitconfig-work
+	path = ~/.gitconfig-work
 [init]
 	defaultBranch = main
+[url "git@github.com:"]
+	insteadOf = https://github.com/
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true

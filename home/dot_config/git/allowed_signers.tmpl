@@ -1,0 +1,15 @@
+{{- /* A 1Password field that comes back empty or malformed must fail the apply: a half-written
+       line would silently disable signature verification. */ -}}
+{{- $personalKey := onepasswordRead "op://Private/github ssh key - personal/public key" | trim -}}
+{{- $workEmail := onepasswordRead "op://Private/github - work/username" | trim -}}
+{{- $workKey := onepasswordRead "op://Private/github ssh key - work/public key" | trim -}}
+{{- range $name, $key := dict "personal" $personalKey "work" $workKey -}}
+{{-   if not (regexMatch "^ssh-[a-z0-9-]+ [A-Za-z0-9+/=]+( [^\\n]*)?$" $key) -}}
+{{-     fail (printf "1Password returned no SSH public key for the %s identity" $name) -}}
+{{-   end -}}
+{{- end -}}
+{{- if not (regexMatch "^[^\\s@]+@[^\\s@]+$" $workEmail) -}}
+{{-   fail "1Password returned no email for the work identity" -}}
+{{- end -}}
+16199817+jeffzi@users.noreply.github.com namespaces="git" {{ $personalKey }}
+{{ $workEmail }} namespaces="git" {{ $workKey }}
