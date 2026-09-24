@@ -1,17 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 {{ template "bash-lib" }}
-
-#==============================================================================
-# Mackup
-#==============================================================================
-
-info "Restoring configs via Mackup..."
-mackup restore --force
-
-info "Loading Mackup backup LaunchAgent..."
-launchctl unload ~/Library/LaunchAgents/com.user.mackup-backup.plist 2>/dev/null || true
-launchctl load ~/Library/LaunchAgents/com.user.mackup-backup.plist
 
 #==============================================================================
 # iTerm2
@@ -19,46 +8,51 @@ launchctl load ~/Library/LaunchAgents/com.user.mackup-backup.plist
 
 info "Setting up iTerm2 preferences..."
 
-# Specify the preferences directory
-defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string "~/.config/iterm2prefs"
-# Tell iTerm2 to use the custom preferences in the directory
-defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
+# ~/.config/iterm2prefs is a symlink into the repo, so iTerm2 saves its
+# settings straight into the chezmoi source tree.
+defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$HOME/.config/iterm2prefs"
+defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
 
 #==============================================================================
-# Login items
+# Login items (.chezmoidata/apps.yaml)
 #==============================================================================
 
 info "Adding login items..."
 
-list_login_items() {
-  osascript -e 'tell application "System Events" to get the name of every login item'
-}
+failures=0
+automation_denied=false
+
+# System Events refuses these calls until this terminal is allowed to control
+# it (System Settings > Privacy & Security > Automation).
+if ! login_items=$(osascript -e 'tell application "System Events" to get the name of every login item'); then
+    warning "Cannot manage login items: allow this terminal to control System Events in System Settings > Privacy & Security > Automation"
+    automation_denied=true
+fi
 
 add_login_item() {
-  path="/Applications/$1.app"
-  if [[ -d $path ]]
-  then
-    osascript -e "tell application \"System Events\" to make login item at end with properties {name: \"$1\",path:\"$path\",hidden:$2}"
-  fi
+    local app="$1"
+    local path="/Applications/$app.app"
+
+    [[ -d "$path" ]] || return 0
+    # osascript lists login items as "A, B, C"; match whole names only.
+    [[ ", $login_items, " == *", $app, "* ]] && return 0
+
+    if osascript -e "tell application \"System Events\" to make login item at end with properties {name: \"$app\", path: \"$path\", hidden: true}" >/dev/null; then
+        success "Added login item: $app"
+    else
+        warning "Failed to add login item: $app"
+        failures=$((failures + 1))
+    fi
 }
 
-{{ $apps := dict
-      "Airfoil" "true"
-      "AlDente" "true"
-      "Amethyst" "true"
-      "Bartender 5" "true"
-      "BetterDisplay" "true"
-      "Flux" "true"
-      "Hammerspoon" "true"
-      "iTerm" "true"
-      "KeepingYouAwake" "true"
-      "LinearMouse" "true"
-      "Shottr" "true"
-      "SpaceId" "true"
--}}
+if [[ "$automation_denied" == false ]]; then
+{{- range .loginItems }}
+    add_login_item {{ . | quote }}
+{{- end }}
+fi
 
-{{ range $app, $hidden := $apps -}}
+if [[ "$automation_denied" == true ]] || ((failures > 0)); then
+    error "Login items are incomplete; chezmoi will retry on the next apply"
+fi
 
-(list_login_items | grep -q "{{ $app }}") || add_login_item "{{ $app }}" "{{ $hidden }}"
-
-{{ end -}}
+success "App configuration complete!"

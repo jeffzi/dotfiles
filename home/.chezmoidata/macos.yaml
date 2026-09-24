@@ -1,0 +1,541 @@
+# macOS user settings, written by run_onchange_after_90-configure-macos with
+# `defaults write` and read back after every apply.
+#
+# Each setting: domain, key, type (bool | int | float | string | array), value.
+# Optional: currentHost: true (ByHost preferences). Values are expanded by bash,
+# so $HOME works. Domains use Apple's exact casing: `defaults` treats
+# com.apple.Finder and com.apple.finder as two different domains.
+#
+# A sandboxed app (Safari, TextEdit, Preview...) reads its settings from its
+# container. When macOS protects that container (Safari's), its settings are
+# written only when the terminal running chezmoi has Full Disk Access.
+#
+# Screen lock ("require password after sleep") is not a `defaults` key since
+# macOS 10.13: set it in System Settings > Lock Screen.
+
+macosDefaults:
+  # General UI/UX
+  # Don't reopen an app's windows when it relaunches (Resume)
+  - domain: com.apple.systempreferences
+    key: NSQuitAlwaysKeepsWindows
+    type: bool
+    value: false
+  # No automatic capitalization
+  - domain: NSGlobalDomain
+    key: NSAutomaticCapitalizationEnabled
+    type: bool
+    value: false
+  # No smart dashes (-- stays --)
+  - domain: NSGlobalDomain
+    key: NSAutomaticDashSubstitutionEnabled
+    type: bool
+    value: false
+  # No period inserted on double space
+  - domain: NSGlobalDomain
+    key: NSAutomaticPeriodSubstitutionEnabled
+    type: bool
+    value: false
+  # No smart quotes
+  - domain: NSGlobalDomain
+    key: NSAutomaticQuoteSubstitutionEnabled
+    type: bool
+    value: false
+  # No autocorrect
+  - domain: NSGlobalDomain
+    key: NSAutomaticSpellingCorrectionEnabled
+    type: bool
+    value: false
+  # No inline text completion suggestions
+  - domain: NSGlobalDomain
+    key: NSAutomaticTextCompletionEnabled
+    type: bool
+    value: false
+  # Full keyboard access: Tab moves through every control in dialogs
+  - domain: NSGlobalDomain
+    key: AppleKeyboardUIMode
+    type: int
+    value: 3
+  # Clicking the scroll bar jumps to the clicked spot, not one page
+  - domain: NSGlobalDomain
+    key: AppleScrollerPagingBehavior
+    type: bool
+    value: true
+  # Handoff: offer this Mac's activities to other devices
+  - domain: com.apple.coreservices.useractivityd
+    key: ActivityAdvertisingAllowed
+    type: bool
+    value: true
+  # Handoff: accept activities from other devices
+  - domain: com.apple.coreservices.useractivityd
+    key: ActivityReceivingAllowed
+    type: bool
+    value: true
+
+  # Trackpad, mouse, keyboard, Bluetooth accessories, and input
+  # Tap to click, Bluetooth trackpad
+  - domain: com.apple.driver.AppleBluetoothMultitouch.trackpad
+    key: Clicking
+    type: bool
+    value: true
+  # Tap to click at the login screen (ByHost: this Mac only)
+  - domain: NSGlobalDomain
+    key: com.apple.mouse.tapBehavior
+    type: int
+    value: 1
+    currentHost: true
+  # Tap to click for this user
+  - domain: NSGlobalDomain
+    key: com.apple.mouse.tapBehavior
+    type: int
+    value: 1
+  # Tap to click, built-in trackpad
+  - domain: com.apple.AppleMultitouchTrackpad
+    key: Clicking
+    type: bool
+    value: true
+  # Three-finger drag moves windows, Bluetooth trackpad
+  - domain: com.apple.driver.AppleBluetoothMultitouch.trackpad
+    key: TrackpadThreeFingerDrag
+    type: bool
+    value: true
+  # Three-finger drag moves windows, built-in trackpad
+  - domain: com.apple.AppleMultitouchTrackpad
+    key: TrackpadThreeFingerDrag
+    type: bool
+    value: true
+  # Natural scrolling off
+  - domain: NSGlobalDomain
+    key: com.apple.swipescrolldirection
+    type: bool
+    value: false
+  # Holding a key repeats it instead of showing the accent picker
+  - domain: NSGlobalDomain
+    key: ApplePressAndHoldEnabled
+    type: bool
+    value: false
+  # Appearance: no automatic light/dark switching
+  - domain: NSGlobalDomain
+    key: AppleInterfaceStyleSwitchesAutomatically
+    type: bool
+    value: false
+  # Appearance: Dark
+  - domain: NSGlobalDomain
+    key: AppleInterfaceStyle
+    type: string
+    value: "Dark"
+  # System language: English, France region
+  - domain: NSGlobalDomain
+    key: AppleLanguages
+    type: array
+    value: ["en-FR"]
+  # Language data macOS downloads for text features: English and French
+  - domain: NSGlobalDomain
+    key: NSLinguisticDataAssetsRequested
+    type: array
+    value: ["en_US", "en", "fr_FR", "fr"]
+  # Region: English text with French formats (dates, numbers, currency)
+  - domain: NSGlobalDomain
+    key: AppleLocale
+    type: string
+    value: "en_FR"
+  # Measurement units: centimeters
+  - domain: NSGlobalDomain
+    key: AppleMeasurementUnits
+    type: string
+    value: "Centimeters"
+  # Metric system
+  - domain: NSGlobalDomain
+    key: AppleMetricUnits
+    type: bool
+    value: true
+  # Activity Monitor shows all processes. 0 is the value from older macOS; current releases
+  # write 100 for "All Processes", which is what this Mac has today
+  - domain: com.apple.ActivityMonitor
+    key: ShowCategory
+    type: int
+    value: 0
+  # TextEdit: new documents are plain text
+  - domain: com.apple.TextEdit
+    key: RichText
+    type: int
+    value: 0
+  # TextEdit: open plain-text files as UTF-8 (4 = UTF-8)
+  - domain: com.apple.TextEdit
+    key: PlainTextEncoding
+    type: int
+    value: 4
+  # TextEdit: save plain-text files as UTF-8 (4 = UTF-8)
+  - domain: com.apple.TextEdit
+    key: PlainTextEncodingForWrite
+    type: int
+    value: 4
+  # Mission Control: keep Spaces in a fixed order, not by most recent use
+  - domain: com.apple.dock
+    key: mru-spaces
+    type: bool
+    value: false
+  # Mission Control: group windows by app
+  - domain: com.apple.dock
+    key: expose-group-apps
+    type: bool
+    value: true
+  # Each display has its own Spaces
+  - domain: com.apple.spaces
+    key: spans-displays
+    type: bool
+    value: false
+  # Switching to an app jumps to a Space where it has open windows
+  - domain: NSGlobalDomain
+    key: AppleSpacesSwitchOnActivate
+    type: bool
+    value: true
+  # Don't offer newly connected disks for Time Machine
+  - domain: com.apple.TimeMachine
+    key: DoNotOfferNewDisksForBackup
+    type: bool
+    value: true
+
+  # Security & Privacy
+  # Terminal: Secure Keyboard Entry, so other apps can't read keystrokes
+  - domain: com.apple.Terminal
+    key: SecureKeyboardEntry
+    type: bool
+    value: true
+  # Don't open Photos when a phone or camera is connected (ByHost: this Mac only)
+  - domain: com.apple.ImageCapture
+    key: disableHotPlug
+    type: bool
+    value: true
+    currentHost: true
+
+  # Developer Tools & Workflow
+  # Save dialogs open expanded, showing the folder tree
+  - domain: NSGlobalDomain
+    key: NSNavPanelExpandedStateForSaveMode
+    type: bool
+    value: true
+  # Save dialogs open expanded (newer key for the same setting)
+  - domain: NSGlobalDomain
+    key: NSNavPanelExpandedStateForSaveMode2
+    type: bool
+    value: true
+  # Print dialogs open expanded
+  - domain: NSGlobalDomain
+    key: PMPrintingExpandedStateForPrint
+    type: bool
+    value: true
+  # Print dialogs open expanded (newer key for the same setting)
+  - domain: NSGlobalDomain
+    key: PMPrintingExpandedStateForPrint2
+    type: bool
+    value: true
+  # Crash dialogs show the full crash report
+  - domain: com.apple.CrashReporter
+    key: DialogType
+    type: string
+    value: "developer"
+  # Terminal: offer only UTF-8 in the encoding menu (4 = UTF-8)
+  - domain: com.apple.Terminal
+    key: StringEncodings
+    type: array
+    value: ["4"]
+  # Terminal: hide the marks in the margin next to each prompt line
+  - domain: com.apple.Terminal
+    key: ShowLineMarks
+    type: int
+    value: 0
+  # Keep the "downloaded from the internet" warning on first open
+  - domain: com.apple.LaunchServices
+    key: LSQuarantine
+    type: bool
+    value: true
+  # Skip checksum verification when opening disk images
+  - domain: com.apple.frameworks.diskimages
+    key: skip-verify
+    type: bool
+    value: true
+  # ... including locked disk images
+  - domain: com.apple.frameworks.diskimages
+    key: skip-verify-locked
+    type: bool
+    value: true
+  # ... including disk images on network volumes
+  - domain: com.apple.frameworks.diskimages
+    key: skip-verify-remote
+    type: bool
+    value: true
+
+  # Creative & Media Workflow
+  # Screenshots go to ~/Downloads instead of the Desktop
+  - domain: com.apple.screencapture
+    key: location
+    type: string
+    value: "$HOME/Downloads"
+  # Screenshots are saved as PNG
+  - domain: com.apple.screencapture
+    key: type
+    type: string
+    value: "png"
+  # No floating thumbnail after taking a screenshot
+  - domain: com.apple.screencapture
+    key: show-thumbnail
+    type: bool
+    value: false
+  # Screenshot filenames include the date
+  - domain: com.apple.screencapture
+    key: include-date
+    type: bool
+    value: true
+  # Window screenshots have no drop shadow
+  - domain: com.apple.screencapture
+    key: disable-shadow
+    type: bool
+    value: true
+  # QuickTime starts playing a video as soon as it opens
+  - domain: com.apple.QuickTimePlayerX
+    key: MGPlayMovieOnOpen
+    type: bool
+    value: true
+  # Preview opens documents as tabs in one window
+  - domain: com.apple.Preview
+    key: AppleWindowTabbingMode
+    type: string
+    value: "always"
+  # Higher minimum Bluetooth audio quality (SBC bitpool 40)
+  - domain: com.apple.BluetoothAudioAgent
+    key: "Apple Bitpool Min (editable)"
+    type: int
+    value: 40
+  # Window backgrounds are not tinted with the wallpaper's color
+  - domain: NSGlobalDomain
+    key: AppleReduceDesktopTinting
+    type: bool
+    value: true
+
+  # Productivity & Performance
+  # Faster Mission Control animation (seconds)
+  - domain: com.apple.dock
+    key: expose-animation-duration
+    type: float
+    value: 0.15
+  # All apps open documents as tabs
+  - domain: NSGlobalDomain
+    key: AppleWindowTabbingMode
+    type: string
+    value: "always"
+  # Minimize windows into their app's Dock icon
+  - domain: com.apple.dock
+    key: minimize-to-application
+    type: bool
+    value: true
+  # Notification banners disappear after 3 seconds
+  - domain: com.apple.notificationcenterui
+    key: bannerTime
+    type: int
+    value: 3
+  # Hot corner, bottom right: start the screen saver (5)
+  - domain: com.apple.dock
+    key: wvous-br-corner
+    type: int
+    value: 5
+  # ... without holding a modifier key
+  - domain: com.apple.dock
+    key: wvous-br-modifier
+    type: int
+    value: 0
+  # Hot corner, top right: Mission Control (2)
+  - domain: com.apple.dock
+    key: wvous-tr-corner
+    type: int
+    value: 2
+  # ... without holding a modifier key
+  - domain: com.apple.dock
+    key: wvous-tr-modifier
+    type: int
+    value: 0
+  # Stage Manager off
+  - domain: com.apple.WindowManager
+    key: GloballyEnabled
+    type: bool
+    value: false
+
+  # Dock
+  # Auto-hide the Dock
+  - domain: com.apple.dock
+    key: autohide
+    type: bool
+    value: true
+  # No recently used apps section in the Dock
+  - domain: com.apple.dock
+    key: show-recents
+    type: bool
+    value: false
+  # Dock icon size in pixels
+  - domain: com.apple.dock
+    key: tilesize
+    type: int
+    value: 64
+
+  # Safari
+  # Show the full URL in the address bar
+  - domain: com.apple.Safari
+    key: ShowFullURLInSmartSearchField
+    type: bool
+    value: true
+  # Don't open "safe" files automatically after downloading
+  - domain: com.apple.Safari
+    key: AutoOpenSafeDownloads
+    type: bool
+    value: false
+  # Find on Page matches text anywhere in a word
+  - domain: com.apple.Safari
+    key: FindOnPageMatchesWordStartsOnly
+    type: bool
+    value: false
+  # "Inspect Element" in the context menu of web views, in every app
+  - domain: NSGlobalDomain
+    key: WebKitDeveloperExtras
+    type: bool
+    value: true
+  # Check spelling while typing
+  - domain: com.apple.Safari
+    key: WebContinuousSpellCheckingEnabled
+    type: bool
+    value: true
+  # No autocorrect
+  - domain: com.apple.Safari
+    key: WebAutomaticSpellingCorrectionEnabled
+    type: bool
+    value: false
+  # Warn about fraudulent websites
+  - domain: com.apple.Safari
+    key: WarnAboutFraudulentWebsites
+    type: bool
+    value: true
+  # AutoFill off: contact info
+  - domain: com.apple.Safari
+    key: AutoFillFromAddressBook
+    type: bool
+    value: false
+  # AutoFill off: passwords (1Password handles them)
+  - domain: com.apple.Safari
+    key: AutoFillPasswords
+    type: bool
+    value: false
+  # AutoFill off: credit cards
+  - domain: com.apple.Safari
+    key: AutoFillCreditCardData
+    type: bool
+    value: false
+  # AutoFill off: other forms
+  - domain: com.apple.Safari
+    key: AutoFillMiscellaneousForms
+    type: bool
+    value: false
+  # Send "Do Not Track". Safari dropped this header in 12.1, so this likely does nothing
+  - domain: com.apple.Safari
+    key: SendDoNotTrackHTTPHeader
+    type: bool
+    value: true
+  # Update Safari extensions automatically
+  - domain: com.apple.Safari
+    key: InstallExtensionUpdatesAutomatically
+    type: bool
+    value: true
+
+  # Finder
+  # Path bar at the bottom of Finder windows
+  - domain: com.apple.finder
+    key: ShowPathbar
+    type: bool
+    value: true
+  # Full POSIX path in the Finder window title
+  - domain: com.apple.finder
+    key: _FXShowPosixPathInTitle
+    type: bool
+    value: true
+  # Show every file extension
+  - domain: NSGlobalDomain
+    key: AppleShowAllExtensions
+    type: bool
+    value: true
+  # Show hidden files
+  - domain: com.apple.finder
+    key: AppleShowAllFiles
+    type: bool
+    value: true
+  # Searches look in the current folder (SCev = This Mac)
+  - domain: com.apple.finder
+    key: FXDefaultSearchScope
+    type: string
+    value: "SCcf"
+  # List view in every Finder window
+  - domain: com.apple.finder
+    key: FXPreferredViewStyle
+    type: string
+    value: "Nlsv"
+  # Folders sort before files
+  - domain: com.apple.finder
+    key: _FXSortFoldersFirst
+    type: bool
+    value: true
+  # Delete items from the Trash after 30 days
+  - domain: com.apple.finder
+    key: FXRemoveOldTrashItems
+    type: bool
+    value: true
+  # No warning when changing a file extension
+  - domain: com.apple.finder
+    key: FXEnableExtensionChangeWarning
+    type: bool
+    value: false
+  # New documents save to disk by default, not iCloud
+  - domain: NSGlobalDomain
+    key: NSDocumentSaveNewDocumentsToCloud
+    type: bool
+    value: false
+  # Large sidebar icons (1 small, 2 medium, 3 large)
+  - domain: NSGlobalDomain
+    key: NSTableViewDefaultSizeMode
+    type: int
+    value: 3
+  # No .DS_Store files on network volumes
+  - domain: com.apple.desktopservices
+    key: DSDontWriteNetworkStores
+    type: bool
+    value: true
+  # No .DS_Store files on USB volumes
+  - domain: com.apple.desktopservices
+    key: DSDontWriteUSBStores
+    type: bool
+    value: true
+  # New Finder windows open the home folder (PfVo main volume, PfAF All My Files, PfCm Computer)
+  - domain: com.apple.finder
+    key: NewWindowTarget
+    type: string
+    value: "PfHm"
+  # ... at this path
+  - domain: com.apple.finder
+    key: NewWindowTargetPath
+    type: string
+    value: "file://$HOME"
+  # Finder shows the preview pane
+  - domain: com.apple.finder
+    key: ShowPreviewPane
+    type: bool
+    value: true
+  # Finder shows the sidebar
+  - domain: com.apple.finder
+    key: ShowSidebar
+    type: bool
+    value: true
+  # Finder shows the status bar
+  - domain: com.apple.finder
+    key: ShowStatusBar
+    type: bool
+    value: true
+  # Finder shows the tab bar
+  - domain: com.apple.finder
+    key: ShowTabView
+    type: bool
+    value: true

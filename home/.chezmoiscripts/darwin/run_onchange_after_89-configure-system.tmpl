@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+
+{{ template "bash-lib" }}
+
+# System-wide settings that need root. They live apart from the user settings
+# in run_onchange_after_90-configure-macos, so a refused sudo or a missing
+# Full Disk Access grant cannot stop those from applying.
+
+# Ask for the password once, up front. A refusal stops the script here instead
+# of prompting again for every command below.
+if [[ "$(id -u)" -ne 0 ]] && ! command sudo --non-interactive true 2>/dev/null; then
+    manual_action "Root privileges are required for system settings, please enter your password below"
+    command sudo --validate || error "Root privileges refused; system settings not applied. chezmoi will retry on the next apply"
+fi
+
+failed=()
+
+# Runs one root command; a failure is reported and the remaining ones still run.
+#   run_system <description> <command...>
+run_system() {
+    local description="$1"
+    shift
+    if ! sudo "$@"; then
+        warning "Failed: $description"
+        failed+=("$description")
+    fi
+}
+
+#==============================================================================
+# Hostname
+#==============================================================================
+
+info "Setting computer name to '{{ .hostname }}'"
+run_system "ComputerName" scutil --set ComputerName "{{ .hostname }}"
+run_system "HostName" scutil --set HostName "{{ .hostname }}"
+run_system "LocalHostName" scutil --set LocalHostName "{{ .hostname }}"
+run_system "SMB NetBIOSName" defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "{{ .hostname }}"
+dscacheutil -flushcache || warning "Failed to flush the directory service cache"
+
+#==============================================================================
+# Time zone, remote access, updates
+#==============================================================================
+
+run_system "time zone" systemsetup -settimezone "Europe/Paris"
+
+# Disable remote apple events (attack vector). Needs Full Disk Access on
+# recent macOS.
+run_system "remote Apple events" systemsetup -setremoteappleevents off
+
+run_system "software update schedule" softwareupdate --schedule on
+
+#==============================================================================
+# Energy & Power Management
+#==============================================================================
+
+# When plugged in (AC Power) - optimize for performance
+# Disable machine sleep while charging (keep working)
+run_system "pmset AC sleep" pmset -c sleep 0
+# Display sleep after 15 minutes (save screen, but generous timeout)
+run_system "pmset AC displaysleep" pmset -c displaysleep 15
+# Disable disk sleep when plugged in (better performance)
+run_system "pmset AC disksleep" pmset -c disksleep 0
+
+# When on battery - conservative to preserve charge
+# Sleep after 10 minutes of inactivity
+run_system "pmset battery sleep" pmset -b sleep 10
+# Display sleep after 5 minutes
+run_system "pmset battery displaysleep" pmset -b displaysleep 5
+# Allow disk sleep to save power
+run_system "pmset battery disksleep" pmset -b disksleep 10
+
+# Enable Power Nap on AC power only (updates while sleeping)
+run_system "pmset AC powernap" pmset -c powernap 1
+run_system "pmset battery powernap" pmset -b powernap 0
+# Automatic restart after power failure (good for desktop-like usage)
+run_system "pmset autorestart" pmset -a autorestart 1
+# Wake for network access when plugged in (allows remote access)
+run_system "pmset AC womp" pmset -c womp 1
+run_system "pmset battery womp" pmset -b womp 0
+
+if ((${#failed[@]} > 0)); then
+    error "${#failed[@]} system setting(s) failed: ${failed[*]}"
+fi
+
+success "System configuration complete!"

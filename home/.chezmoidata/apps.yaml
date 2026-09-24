@@ -1,0 +1,14 @@
+# Apps started at login, hidden. Rendered by run_onchange_after_91-configure-apps;
+# an app that is not installed in /Applications is skipped.
+loginItems:
+  - Airfoil
+  - AlDente
+  - Amethyst
+  - Bartender 6
+  - BetterDisplay
+  - Hammerspoon
+  - iTerm
+  - KeepingYouAwake
+  - LinearMouse
+  - Shottr
+  - SpaceId
