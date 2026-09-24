@@ -1,6 +1,7 @@
+{{- $workOrg := promptStringOnce . "workOrg" "Work organisation directory under ~/Projects/work (empty for none)" -}}
 [data]
-    username = "jeffzi"
     hostname = "{{ printf "%s-%s" "jf" .chezmoi.os  -}}"
+    workOrg = {{ $workOrg | quote }}
 
 [edit]
     command = "code"
