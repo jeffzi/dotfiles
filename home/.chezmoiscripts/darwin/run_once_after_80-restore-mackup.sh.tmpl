@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+{{ template "bash-lib" }}
+
+# Restores the apps in ~/.mackup.cfg once per machine. A later restore would
+# overwrite settings changed since the last daily backup, so the marker below
+# keeps it from running again even when this script or the config changes.
+# Runs before the macOS settings scripts so their keys win over restored plists.
+
+readonly MARKER="$HOME/.local/state/dotfiles/mackup-restored"
+
+if [[ -e "$MARKER" ]]; then
+    info "Mackup restore already ran on this machine, skipping"
+    exit 0
+fi
+
+command -v mackup &>/dev/null || error "Mackup is not installed; it comes from the Brewfile"
+
+info "Restoring app settings via Mackup..."
+mackup restore --force || error "Mackup restore failed; chezmoi will retry on the next apply"
+
+# Mackup copies plist files behind cfprefsd's back. A domain it already had
+# cached (Terminal's, when apply runs in Terminal.app) would be written back
+# over the restored file; restarting it makes every app reload from disk.
+killall cfprefsd &>/dev/null || true
+
+mkdir -p "$(dirname "$MARKER")"
+touch "$MARKER"
+success "Mackup restore complete!"

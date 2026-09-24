@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# Reloads the agent whenever its definition changes:
+# {{ include "Library/LaunchAgents/com.user.mackup-backup.plist" | sha256sum }}
+
+{{ template "bash-lib" }}
+
+info "Loading Mackup backup LaunchAgent..."
+readonly MACKUP_LABEL="com.user.mackup-backup"
+LAUNCHD_DOMAIN="gui/$(id -u)"
+readonly LAUNCHD_DOMAIN
+
+# bootout returns before launchd has finished removing the service, and
+# bootstrap fails while the old instance is still registered.
+launchctl bootout "$LAUNCHD_DOMAIN/$MACKUP_LABEL" 2>/dev/null || true
+for _ in 1 2 3 4 5 6 7 8 9 10; do
+  launchctl print "$LAUNCHD_DOMAIN/$MACKUP_LABEL" &>/dev/null || break
+  sleep 0.5
+done
+launchctl bootstrap "$LAUNCHD_DOMAIN" ~/Library/LaunchAgents/"$MACKUP_LABEL".plist ||
+  warning "Failed to load the Mackup backup LaunchAgent (it will load at next login)"
