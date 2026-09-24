@@ -1,7 +1,7 @@
 [".hammerspoon/Spoons/EmmyLua.spoon"]
 type = "archive"
 url = "https://github.com/Hammerspoon/Spoons/raw/master/Spoons/EmmyLua.spoon.zip"
-stripComponents = 0
+stripComponents = 1
 refreshPeriod = "168h"
 
 # Works around a macOS bug where the stock Unicode Hex Input layout cannot type
