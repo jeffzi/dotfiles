@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+{{ template "bash-lib" }}
+
+# Cloned once at bootstrap. Later applies never pull, rebase, or stash here,
+# so local commits and uncommitted edits in ~/.claude stay as they are.
+CLAUDE_DIR="$HOME/.claude"
+
+if [[ -e "$CLAUDE_DIR" ]]; then
+    info "$CLAUDE_DIR already exists, leaving it untouched"
+    exit 0
+fi
+
+info "Cloning Claude Code configuration to ~/.claude..."
+git clone https://github.com/jeffzi/.claude "$CLAUDE_DIR"
+success "Claude Code configuration cloned"
