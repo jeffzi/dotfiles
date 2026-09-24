@@ -1,0 +1,2 @@
+# Karabiner-Elements writes a timestamped copy of karabiner.json on every save.
+automatic_backups/
