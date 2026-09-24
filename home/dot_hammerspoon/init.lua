@@ -1,7 +1,9 @@
 hs.loadSpoon("EmmyLua")
+require("hs.ipc")
 
-local inspect = hs.inspect.inspect
-
+--- Send a macOS notification with an info or caution icon.
+--- @param title string Notification title.
+--- @param is_error boolean? Caution-icon flag; info icon when false or nil.
 local function notification(title, is_error)
    local icon = is_error and "NSCaution" or "NSInfo"
    hs.notify
@@ -14,149 +16,68 @@ end
 -- Screen management
 -- -----------------
 
+local screen_log = hs.logger.new("screen", "debug")
+
+--- @class ScreenMode
+--- @field label string Log label.
+--- @field w integer Width in points.
+--- @field h integer Height in points.
+
+local EXTERNAL_SCREEN_NAME = "AW3926QW"
+--- @type ScreenMode
+local DOCKED_MODE = { label = "Docked", w = 1149, h = 746 }
+--- @type ScreenMode
+local STANDALONE_MODE = { label = "Standalone", w = 1346, h = 874 }
+local SCREEN_SCALE = 2.0
+local SCREEN_REFRESH = 120
+local SCREEN_DEPTH = 8
+local SCREEN_SETTLE_DELAY_S = 1.5
+
+--- Set laptop screen resolution based on whether an external display is connected.
 local function set_screen_resolution()
-   local screens = hs.screen.allScreens()
-   if #screens == 1 then
-      hs.screen.primaryScreen():setMode(1352, 878, 2.0, 120, 8)
-   else
-      local laptopScreen = hs.screen.find("Built%-in")
-      laptopScreen:setMode(1147, 745, 2.0, 120, 8)
-   end
-end
+   local laptop = hs.screen.find("Built%-in")
+   local external = hs.screen.find(EXTERNAL_SCREEN_NAME)
 
-hs.screen.watcher.new(set_screen_resolution):start()
+   screen_log.df(
+      "Screens: laptop=%s external=%s",
+      tostring(laptop ~= nil),
+      tostring(external ~= nil)
+   )
 
--- ------------------------------------------------------------
--- Switch on/off external display (shared with Desktop machine)
--- ------------------------------------------------------------
-
-local log = hs.logger.new("display", "debug")
-
--- Fix for currentNetwork returning nil on MacOS Sonoma
--- This will add Hammerspoon to Settings/Privacy & Security/Location Services where we need to enable it.
--- https://github.com/Hammerspoon/hammerspoon/issues/3537#issuecomment-1743870568
-hs.location.get()
-
-local currentNetwork = hs.wifi.currentNetwork
-local home_ssid = "zheli"
-local desktop_address = "192.168.1.85"
-
-local function is_home()
-   return currentNetwork() == home_ssid
-end
-
-local function is_anker_hub(usb_device)
-   -- Using 2 devices to detect the anker hub consistenly
-   --"USB 10/100/1000 LAN"
-   return (usb_device.vendorID == 3034 and usb_device.productID == 33107)
-      -- "USB3.1 Hub"
-      or (usb_device.vendorID == 1507 and usb_device.productID == 1574)
-end
-
-local function is_anker_hub_connected()
-   local usb_devices = hs.usb.attachedDevices()
-   for i = 1, #usb_devices do
-      if is_anker_hub(usb_devices[i]) then
-         return true
-      end
-   end
-   return false
-end
-
-local function run_shortcut(shortcut)
-   log.i(string.format("Running %s shortcut...", shortcut))
-   local success = os.execute(string.format("shortcuts run '%s'", shortcut))
-   if not success then
-      local error = string.format("Failed to run `shortcuts %s'`", shortcut)
-      log.e(error)
-      notification(error, true)
-      return false
-   else
-      log.i("done.")
-      notification(shortcut)
-      return true
-   end
-end
-
-local function desk_on()
-   log.i("Running desk_on function...")
-   if not is_home() then
-      notification("Not home, don't switch on the plug.")
+   if laptop == nil then
+      screen_log.i("Clamshell mode (no laptop screen)")
       return
    end
-   if is_anker_hub_connected() then
-      run_shortcut("Desktop on")
-   end
-end
 
-local ping = hs.network.ping.ping
+   local current = laptop:currentMode()
+   local target = external ~= nil and DOCKED_MODE or STANDALONE_MODE
 
-local function desk_off()
-   log.i("Running desk_off function...")
-   if not is_home() then
-      notification("Not home, don't switch off the plug.")
+   if current.w == target.w and current.h == target.h then
+      screen_log.d("Laptop already at target resolution, skipping")
       return
    end
-   -- Switch off display only when Desktop is not awake.
-   local is_success = false
-   local function ping_callback(self, message)
-      if message == "receivedPacket" then
-         is_success = true
-         self:cancel() -- exit early if one ping succeeds
-      elseif message == "didFinish" and not is_success then
-         run_shortcut("Desktop off")
-      end
-   end
 
-   log.i("pinging desktop...")
-   ping(desktop_address, 1, 1.0, 1.0, "any", ping_callback)
-end
-
-local function auto_power_desk()
-   if is_anker_hub_connected() then
-      desk_on()
-   else
-      desk_off()
-   end
-end
-
-auto_power_desk()
-
-local usb_log = hs.logger.new("usb", "debug")
-local function hub_callback(event)
-   usb_log.i(inspect(event))
-   if not is_anker_hub(event) then
+   local ok = laptop:setMode(target.w, target.h, SCREEN_SCALE, SCREEN_REFRESH, SCREEN_DEPTH)
+   if not ok then
+      screen_log.ef("Failed to set laptop resolution to %dx%d", target.w, target.h)
+      notification("Failed to set laptop resolution", true)
       return
    end
-   if event.eventType == "added" then
-      desk_on()
-   elseif event.eventType == "removed" then
-      desk_off()
-   end
+
+   screen_log.f("%s: laptop → %dx%d", target.label, target.w, target.h)
 end
 
-hs.usb.watcher.new(hub_callback):start()
-usb_log.i("Attached USB devices:\n" .. inspect(hs.usb.attachedDevices()))
+-- macOS emits several screen events per plug/unplug; restarting one delayed timer runs
+-- set_screen_resolution once, after the last event has settled.
+local screen_settle_timer = hs.timer.delayed.new(SCREEN_SETTLE_DELAY_S, set_screen_resolution)
 
-local caffeinate_watcher = hs.caffeinate.watcher
-local on_events = {
-   [caffeinate_watcher.systemDidWake] = true,
-   [caffeinate_watcher.screensDidUnlock] = true,
-}
-local off_events = {
-   [caffeinate_watcher.systemWillSleep] = true,
-   [caffeinate_watcher.systemWillPowerOff] = true,
-}
-local caffeinate_log = hs.logger.new("caffeinate", "debug")
-
-local function system_state_callback(event)
-   if on_events[event] then
-      caffeinate_log.i("Switch on event: " .. event)
-      desk_on()
-   elseif off_events[event] then
-      caffeinate_log.i("Switch off event: " .. event)
-      desk_off()
-   end
+--- Restart the settle countdown on each screen configuration change.
+local function on_screen_change()
+   screen_log.df("Screen change detected, waiting %gs for macOS...", SCREEN_SETTLE_DELAY_S)
+   screen_settle_timer:start()
 end
 
-caffeinate_watcher.new(system_state_callback):start()
+-- Global, not local: a local goes out of scope once init.lua returns, and the garbage
+-- collector then stops the watcher silently.
+screen_watcher = hs.screen.watcher.new(on_screen_change):start()
+set_screen_resolution()
