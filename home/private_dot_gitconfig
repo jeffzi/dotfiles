@@ -16,6 +16,8 @@
 	allowedSignersFile = ~/.config/git/allowed_signers
 [commit]
 	gpgsign = true
+[tag]
+	gpgSign = true
 [push]
 	autoSetupRemote = true
 [includeIf "gitdir:~/.local/share/chezmoi/"]
