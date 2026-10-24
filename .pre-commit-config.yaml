@@ -82,6 +82,6 @@ repos:
         additional_dependencies: ["@commitlint/config-conventional"]
 
   - repo: https://github.com/tombi-toml/tombi-pre-commit
-    rev: v1.5.5
+    rev: v1.9.2
     hooks:
       - id: tombi-format
