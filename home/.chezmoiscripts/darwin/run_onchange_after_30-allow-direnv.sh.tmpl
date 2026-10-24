@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# Metamoki envrc hash: {{ include "Projects/work/metamoki/dot_envrc" | sha256sum }}
+
+{{ template "bash-lib" }}
+
+#==============================================================================
+# Trust managed direnv files
+#==============================================================================
+
+# direnv keeps its allow list per machine and keys it on the file's content,
+# so every change to a managed .envrc needs a fresh allow.
+if ! command -v direnv &> /dev/null; then
+    warning "direnv not found, skipping allow"
+    exit 0
+fi
+
+info "Allowing managed direnv files..."
+direnv allow "$HOME/Projects/work/metamoki" || warning "Failed to allow ~/Projects/work/metamoki/.envrc"
+
+success "direnv files allowed!"
