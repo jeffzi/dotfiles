@@ -1,0 +1,4 @@
+function ccp -d "Claude Code print mode billed to Max API credits"
+    ENABLE_CLAUDEAI_MCP_SERVERS=false ANTHROPIC_API_KEY={{ onepasswordRead "op://Private/Anthropic API - Max credits/credential" | quote }} \
+        claude -p --model opus --effort medium $argv
+end
