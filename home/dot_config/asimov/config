@@ -1,0 +1,11 @@
+# Asimov excludes rebuildable folders from Time Machine. Dependency folders
+# (node_modules, .venv, target, ...) are found by the project file beside them.
+# The built-in global caches cover ~/.cache, ~/.npm/_cacache and ~/go/pkg/mod.
+
+[fixed_dirs]
+enabled = true
+# Colima's VM disk image changes constantly, so every hourly backup would copy it.
+extra = ~/.colima
+# Xcode DerivedData and simulators. Asimov never searches ~/Library, but fixed
+# directories are excluded regardless.
+extra = ~/Library/Developer

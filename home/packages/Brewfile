@@ -1,4 +1,5 @@
 # CLI tools
+brew "asimov"
 brew "awscli"
 brew "bash"
 brew "bat"

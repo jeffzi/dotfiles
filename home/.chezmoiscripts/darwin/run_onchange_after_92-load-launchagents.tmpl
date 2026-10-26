@@ -19,3 +19,9 @@ for _ in 1 2 3 4 5 6 7 8 9 10; do
 done
 launchctl bootstrap "$LAUNCHD_DOMAIN" ~/Library/LaunchAgents/"$MACKUP_LABEL".plist ||
   warning "Failed to load the Mackup backup LaunchAgent (it will load at next login)"
+
+# Daily scan that excludes rebuildable folders from Time Machine
+# (~/.config/asimov/config).
+info "Starting Asimov service..."
+brew services start asimov ||
+  warning "Failed to start the Asimov service"

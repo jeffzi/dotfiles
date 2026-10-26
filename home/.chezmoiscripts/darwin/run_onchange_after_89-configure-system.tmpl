@@ -78,6 +78,28 @@ run_system "pmset autorestart" pmset -a autorestart 1
 run_system "pmset AC womp" pmset -c womp 1
 run_system "pmset battery womp" pmset -b womp 0
 
+#==============================================================================
+# Time Machine
+#==============================================================================
+
+# Fixed-path exclusions (SkipPaths). Rebuildable folders are excluded by Asimov
+# instead (~/.config/asimov/config). The isexcluded guard keeps a re-run from
+# adding a path that is already listed.
+tm_skip_paths=(
+    "$HOME/Desktop"
+    "$HOME/Documents"
+    "$HOME/Downloads"
+    "$HOME/Movies"
+    "$HOME/Music"
+    "$HOME/Pictures"
+    "$HOME/Public"
+    /Applications
+)
+for path in "${tm_skip_paths[@]}"; do
+    [[ "$(tmutil isexcluded "$path")" == "[Excluded]"* ]] && continue
+    run_system "Time Machine exclusion $path" tmutil addexclusion -p "$path"
+done
+
 if ((${#failed[@]} > 0)); then
     error "${#failed[@]} system setting(s) failed: ${failed[*]}"
 fi
