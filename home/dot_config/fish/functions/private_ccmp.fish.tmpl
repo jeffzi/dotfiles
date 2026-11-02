@@ -1,0 +1,4 @@
+function ccmp -d "Claude Code print mode with Max account, billed to its API credits"
+    CLAUDE_CONFIG_DIR=~/.claude-max ENABLE_CLAUDEAI_MCP_SERVERS=false ANTHROPIC_API_KEY={{ onepasswordRead "op://Private/Anthropic API - Max credits/credential" | quote }} \
+        claude -p --model opus --effort medium $argv
+end
